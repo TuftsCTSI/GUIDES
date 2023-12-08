@@ -1,0 +1,12 @@
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+FunSQL = "cf6cc811-59f4-4a10-b258-a8547a8f6407"
+ODBC = "be6f12e9-ca4f-5eb2-a339-a4f995cc0291"
+Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+PlutoPlotly = "8e989ff0-3d88-8e9f-f020-2b208a939ff0"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+TRDW = "0719a0bd-20d8-4d8e-abe7-d82c18a4d09f"
+TerminalPager = "0c614874-6106-40ed-a7c2-2f1cd0bff883"
+ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
