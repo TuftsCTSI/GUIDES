@@ -666,7 +666,7 @@ version = "1.0.3"
 
 [[deps.TRDW]]
 deps = ["CSV", "Chain", "DataFrames", "Dates", "FunSQL", "ODBC", "PlutoLinks", "PlutoPlotly", "PlutoUI", "ZipFile", "p7zip_jll"]
-git-tree-sha1 = "66e1c6374a0676ab58b4a12b41f1cc5999e8b389"
+git-tree-sha1 = "99f1cca90a9a74d93f3ec03ec0989837635f3de4"
 repo-rev = "main"
 repo-url = "https://github.com/TuftsCTSI/TRDW.jl.git"
 uuid = "0719a0bd-20d8-4d8e-abe7-d82c18a4d09f"

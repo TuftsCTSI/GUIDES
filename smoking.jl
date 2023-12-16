@@ -56,8 +56,8 @@ md"""We could construct a value set of concepts that match smoking behavior...""
 
 # ╔═╡ eab365a6-d117-435a-8813-e8e0b2d4f9b6
 smoking_behavior = @concepts begin
-	smoker = [
-		OMOP_Extension("OMOP5181846","Cigar smoker"),
+    smoker = [
+        OMOP_Extension("OMOP5181846","Cigar smoker"),
         OMOP_Extension("OMOP5181838","Cigarette smoker"),
         OMOP_Extension("OMOP5181836","Electronic cigarette smoker"),
         OMOP_Extension("OMOP5181847","Hookah smoker"),
@@ -89,49 +89,48 @@ end
 
 # ╔═╡ e2a29e89-036d-4d6d-9176-8c0ec666f87c
 @query begin
-	concept()
-	filter(icontains(concept_name, "smoking", "smoke", "tobacco"))
-	join(obs => begin
-		observation()
-		group(observation_concept_id)
-	end, concept_id == obs.observation_concept_id)
-	define(n_event => obs.count())
-	define(n_person => obs.count_distinct(person_id))
-	order(n_person.desc())
-	select(n_person, n_event, concept_id, vocabulary_id, concept_class_id, concept_code, concept_name)
+    concept()
+    filter(icontains(concept_name, "smoking", "smoke", "tobacco"))
+    join(obs => begin
+        observation()
+        group(observation_concept_id)
+    end, concept_id == obs.observation_concept_id)
+    define(n_event => obs.count())
+    define(n_person => obs.count_distinct(person_id))
+    order(n_person.desc())
+    select(n_person => roundups(n_person), concept_id, vocabulary_id, concept_class_id, concept_code, concept_name)
 end
 
 # ╔═╡ d2e766e1-33eb-4bf8-8027-918228503973
 @query begin
-	observation()
-	filter(observation_matches($findings_of_tobacco))
-	group(observation_concept_id)
-	select_concept(observation, n_person => count_distinct(person_id), n_event => count())
-	order(n_person.desc())
+    observation()
+    filter(observation_matches($findings_of_tobacco))
+    count_concept(observation_concept_id)
 end
 
 # ╔═╡ e1cec40e-393b-449b-840f-31af11276b5f
 @query begin
-	observation()
-	filter(observation_matches($findings_of_tobacco))
-	group(observation_concept_id, value_as_concept_id)
-	define(n_event => count())
-	left_join(main => concept(), main.concept_id == observation_concept_id)
-	left_join(value => concept(), value.concept_id == value_as_concept_id)
-	select(n_event, observation_concept_id, observation_concept => concat(left(main.concept_name, 19), "..."),
-		value.concept_id, value.vocabulary_id, value.concept_code, value.concept_name)
-	order(isnull(vocabulary_id), n_event.desc())
+    observation()
+    filter(observation_matches($findings_of_tobacco))
+    group(observation_concept_id, value_as_concept_id)
+    define(n_event => count())
+    left_join(main => concept(), main.concept_id == observation_concept_id)
+    left_join(value => concept(), value.concept_id == value_as_concept_id)
+    order(isnull(value.vocabulary_id), n_event.desc())
+    select(n_event => roundups(n_event),
+        observation_concept_id, observation_concept => concat(left(main.concept_name, 19), "..."),
+        value.concept_id, value.vocabulary_id, value.concept_code, value.concept_name)
 end
 
 # ╔═╡ 0575f567-30c1-4d3f-a091-046d82492104
 @query begin
-	observation()
-	filter(observation_concept_id == $findings_of_tobacco &&
-	       (is_null(value_as_concept_id) || value_as_concept_id == 0))
-	group(value_as_concept_id, value_as_string, value_as_number, observation_source_value)
-	define(count())
+    observation()
+    filter(observation_concept_id == $findings_of_tobacco &&
+           (is_null(value_as_concept_id) || value_as_concept_id == 0))
+    group(value_as_concept_id, value_as_string, value_as_number, observation_source_value)
+    define(n_event => roundups(count()))
 end
-	
+
 
 # ╔═╡ 6a704eb8-ddd5-4a7d-a5b9-8f017b5e575a
 @query concept($findings_of_tobacco).concept_children()

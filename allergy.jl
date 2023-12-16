@@ -37,51 +37,43 @@ This notebook outlines allergy handling in the Tufts Research Data Warehouse (TR
 
 """
 
-# ╔═╡ 9e6aae7c-7368-4857-8fad-514fe76ff572
-md"""#### Soarian: Tufts Medical Center before April 1st 2022"""
+# ╔═╡ e2b098ec-5afd-427a-a34b-cae768a35008
+md"""Allergy records seem to be represented as children of one of the following high-level SNOMED concepts."""
 
-# ╔═╡ 8067ceff-9ef6-49a8-ae8c-712bc885a8a8
-md"""Allergy records are represented as observations with SNOMED `609328004|Allergic disposition`."""
-
-# ╔═╡ 7a64e871-2b1d-4758-a57f-add08101feb7
-@funsql allergies() = observation(SNOMED(609328004, "Allergic disposition"))
-
-# ╔═╡ 6e614fcc-21b0-472d-a2b3-8eee52f5831c
-md"""Alergies are often indexed as RxNorm ingredients."""
-
-# ╔═╡ 33eb276d-319c-4135-b910-5f4fab9f001e
-allergens = @concepts begin
-    penicillins = drug_ingredient_via_NDFRT("N0000011281", "Penicillins")
+# ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
+allergy_concepts = @concepts begin
+    alergic_disorder = [SNOMED(781474001, "Allergic disorder")]
+    propensity_to_reaction = [SNOMED(420134006, "Propensity to adverse reaction")]
+    hypersensitivity = [SNOMED(609406000, "Non-allergic hypersensitivity reaction")]
 end
 
+# ╔═╡ 40083ddf-9f11-401e-a046-e2f03f94b05c
+md"""Before the Epic cutover the `value_as_concept_id` was primarily used to differentate allergens."""
+
+# ╔═╡ e837deec-3a62-4878-869b-4990754a1fdf
+md"""When `value_as_concept_id` is used, the observation concept is typically `609328004|Allergic disposition`."""
+
 # ╔═╡ 0ced86b0-2e52-4ca3-aca8-b09fd7feaa4a
-md"""They are enumerated by maching on the `value_as_concept_id` column"""
+md"""These SNOMED concepts can sometimes be elaborated with `value_as_concept_id` column."""
+
+# ╔═╡ 9e0c1ceb-21b2-455a-8b0b-2458eb67abf8
+md"""For historical data, many of those using this generic concept didn't map `value_as_concept_id`."""
+
+# ╔═╡ 663f6312-f2ff-4bae-889a-15cab9a470b6
+md"""For EPIC sourced data, the observation is precise but the `value_as_concept` is not provided."""
 
 # ╔═╡ bd890e7a-5259-4548-948b-3809bd6319b0
 md"""> Our Soarian data currently fails to map categories of allergies, such as penicillins."""
 
-# ╔═╡ 740db90e-4f2b-428f-9bee-f480cc9c2e55
-md"""#### EPIC: Tufts Medicine, after April 1st 2022"""
-
-# ╔═╡ 52643fd2-6ac6-430e-a5eb-28607a8d87a7
-md"""For EPIC data, allergies are represented as observations with decendants of the following concepts."""
-
-# ╔═╡ 7bd3797a-fc9d-4d02-8667-e42d7ab38794
-allergy_concepts = @concepts begin
-	alergic_disorder = [SNOMED(781474001, "Allergic disorder")]
-	propensity_to_reaction = [SNOMED(420134006, "Propensity to adverse reaction")]
-	hypersensitivity = [SNOMED(609406000, "Non-allergic hypersensitivity reaction")]
-end
-
-# ╔═╡ 6c6ef658-9fe5-4c67-8f49-283fc0acbf72
-md"""There is an exception for penicillins which are mapped explicitly."""
-
-# ╔═╡ b3515114-c908-4b26-bdab-1adc0c93bff3
-md"""The current algorithem for mapping EPIC allergies first matches on "allergy to" concepts, then rounds up to standard concepts. Here we make sure that our `allergy_concepts` covers those that are mapped."""
+# ╔═╡ e637cd4d-8523-41ee-a461-839e60b222fa
+md"""Our EPIC sourced data has a specific exception for `"penicillins"` mapping it to `91936005|Allergy to penicillin` which works via SNOMED hierarchy to be generic."""
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
 md"""## Appendix
 """
+
+# ╔═╡ aaca8900-9cb4-4438-a18b-0f576b144d84
+TRDW.funsql_export()
 
 # ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
 DATA_WAREHOUSE = "ctsi.trdw_merge" # Both Soarian and Epic Data
@@ -98,54 +90,77 @@ macro query(q)
 end
 
 
-# ╔═╡ e2a29e89-036d-4d6d-9176-8c0ec666f87c
-@query allergies().group().select(count())
+# ╔═╡ 2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
+@query observation($allergy_concepts).group(pre_epic => observation_id > 1500000000).define(count())
+
+# ╔═╡ d19520ed-7353-4c2e-a08c-5b08bd219996
+@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).group(pre_epic => observation_id > 1500000000).define(count())
+
+# ╔═╡ fe87fb24-0c9e-456c-afc7-3e5bd5955e3e
+@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).count_concept(observation)
 
 # ╔═╡ 0e1f40c4-085a-4597-9fe4-a80b03204a0d
  @query begin
-	allergies()
-	filter(concept_matches($allergens; match_prefix=value_as_concept_id))
-	count_concept(value_as_concept_id)
+    observation(SNOMED(609328004, "Allergic disposition"))
+    count_concept(value_as_concept_id)
 end
 
-# ╔═╡ 266d3efe-ef06-4539-ac14-840bb778cd0b
-@query observation($allergy_concepts).group().define(count())
+# ╔═╡ fa42532e-e4e9-4d37-9dd3-24b22506baf2
+ @query begin
+    observation(SNOMED(91936005, "Allergy to penicillin"))
+    filter(post_epic => observation_id < 1500000000)
+    count_concept(observation)
+end
 
-# ╔═╡ 11448962-a8e3-4df7-b29c-785838aafb2f
-@query observation(SNOMED(91936005, "Allergy to penicillin")).group().define(count())
+# ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
+macro aquery(q)
+    :(TRDW.run($db, @funsql $q; annotate_keys=true))
+end
 
-# ╔═╡ a925f6c2-a29b-4966-b5a7-2e94bd05b404
-@query begin
-	concept()
-	filter(vocabulary_id == "SNOMED" && domain_id == "Observation" && ilike(concept_name, "allergy to %"))
-	concept_relatives("Maps to")
-	define(isa_allergy => concept_matches($allergy_concepts))
-	filter(!isa_allergy)
+# ╔═╡ 1ff00dca-7c61-4582-aaba-19e09c2cd46b
+ @aquery begin
+    observation($allergy_concepts)
+    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
+    filter(pre_epic => observation_id > 1500000000)
+    group(observation_concept_id, value_as_string)
+    order(count().desc())
+    define(n_event => roundups(count()))
+end
+
+# ╔═╡ 5a947b47-ce4b-4a16-9d43-9095cd2f5340
+ @aquery begin
+    observation(SNOMED(609328004, "Allergic disposition"))
+    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
+    filter(post_epic => observation_id < 1500000000)
+    group(observation_concept_id, value_as_string)
+    order(count().desc())
+    define(n_event => roundups(count()))
 end
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0
-# ╟─9e6aae7c-7368-4857-8fad-514fe76ff572
-# ╟─8067ceff-9ef6-49a8-ae8c-712bc885a8a8
-# ╠═7a64e871-2b1d-4758-a57f-add08101feb7
-# ╠═e2a29e89-036d-4d6d-9176-8c0ec666f87c
-# ╟─6e614fcc-21b0-472d-a2b3-8eee52f5831c
-# ╠═33eb276d-319c-4135-b910-5f4fab9f001e
+# ╟─e2b098ec-5afd-427a-a34b-cae768a35008
+# ╠═67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
+# ╠═2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
+# ╟─40083ddf-9f11-401e-a046-e2f03f94b05c
+# ╠═d19520ed-7353-4c2e-a08c-5b08bd219996
+# ╟─e837deec-3a62-4878-869b-4990754a1fdf
+# ╠═fe87fb24-0c9e-456c-afc7-3e5bd5955e3e
 # ╟─0ced86b0-2e52-4ca3-aca8-b09fd7feaa4a
 # ╠═0e1f40c4-085a-4597-9fe4-a80b03204a0d
+# ╟─9e0c1ceb-21b2-455a-8b0b-2458eb67abf8
+# ╠═1ff00dca-7c61-4582-aaba-19e09c2cd46b
+# ╟─663f6312-f2ff-4bae-889a-15cab9a470b6
+# ╠═5a947b47-ce4b-4a16-9d43-9095cd2f5340
 # ╟─bd890e7a-5259-4548-948b-3809bd6319b0
-# ╟─740db90e-4f2b-428f-9bee-f480cc9c2e55
-# ╟─52643fd2-6ac6-430e-a5eb-28607a8d87a7
-# ╠═7bd3797a-fc9d-4d02-8667-e42d7ab38794
-# ╠═266d3efe-ef06-4539-ac14-840bb778cd0b
-# ╟─6c6ef658-9fe5-4c67-8f49-283fc0acbf72
-# ╠═11448962-a8e3-4df7-b29c-785838aafb2f
-# ╟─b3515114-c908-4b26-bdab-1adc0c93bff3
-# ╠═a925f6c2-a29b-4966-b5a7-2e94bd05b404
+# ╟─e637cd4d-8523-41ee-a461-839e60b222fa
+# ╠═fa42532e-e4e9-4d37-9dd3-24b22506baf2
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
 # ╟─c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
+# ╠═aaca8900-9cb4-4438-a18b-0f576b144d84
 # ╠═756b56b0-a735-4ef8-a41f-c38112acda2c
 # ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
 # ╠═d4242e16-d8cf-46da-b707-5a9ff9efe1f2
 # ╠═f171861f-fe0d-4976-861c-c28ab6e27101
+# ╠═87f6fa05-6806-4044-b88f-ff447144ffa9
