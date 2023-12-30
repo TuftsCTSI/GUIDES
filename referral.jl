@@ -3,7 +3,7 @@
 
 #> [frontmatter]
 #> order = "3"
-#> title = "Querying Allergy Data"
+#> title = "Patient Referrals"
 
 using Markdown
 using InteractiveUtils
