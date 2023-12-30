@@ -63,7 +63,11 @@ md"""For historical data, many of those using this generic concept didn't map `v
 md"""For EPIC sourced data, the observation is precise but the `value_as_concept` is not provided."""
 
 # ╔═╡ bd890e7a-5259-4548-948b-3809bd6319b0
-md"""> Our Soarian data currently fails to map categories of allergies, such as penicillins."""
+md"""
+!!! note
+
+Our Soarian data currently fails to map categories of allergies, such as penicillins.
+"""
 
 # ╔═╡ e637cd4d-8523-41ee-a461-839e60b222fa
 md"""Our EPIC sourced data has a specific exception for `"penicillins"` mapping it to `91936005|Allergy to penicillin` which works via SNOMED hierarchy to be generic."""
