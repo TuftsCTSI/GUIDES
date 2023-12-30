@@ -123,6 +123,12 @@ md"""How does specialty correlate with the kind of visit?"""
 # ╔═╡ 80ffbc9e-1d97-46ea-8a5e-168f5b1d3b66
 md"""Sometimes the visit detail has more information."""
 
+# ╔═╡ 67b624ac-12ca-48b2-b64d-856af4a750ed
+md"""Perhaps something useful is stored in visit_source"""
+
+# ╔═╡ e0ea032b-d7fb-43c9-afd2-80fb1c8ed16e
+md"""How about the specialty source concept?"""
+
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
 md"""## Appendix
 """
@@ -173,61 +179,60 @@ end
 # ╔═╡ ee2618bb-29e5-4866-91f6-0fca32a3ec26
 @query begin
 	visit()
-	define(ext.is_historical)
+	define(ext.is_preepic)
 	define(visit_name => 
 	    replace(type_concept.concept_name, "Visit derived from ", ""))
-	concept_set_pivot($visit_concepts; group=[is_historical, visit_name])
+	concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
 end
 
 # ╔═╡ 87bc697d-f238-4a7b-8e44-545e133f64be
 @query begin
 	visit_detail()
-	define(ext.is_historical)
+	define(ext.is_preepic)
 	define(visit_name => 
 	    replace(type_concept.concept_name, "Visit derived from ", ""))
-	concept_set_pivot($visit_concepts; group=[is_historical, visit_name])
+	concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
 end
 
 # ╔═╡ 04076e79-2e2a-49eb-acc1-bec1defdee30
 @query begin
 	care_site()
-	group(concept_id, ext.is_historical)
-	select_concept(concept_id, is_historical, count())
+	group(concept_id, ext.is_preepic)
+	select_concept(concept_id, is_preepic, count())
 	order(count.desc())
 end
 
 # ╔═╡ 8db3cb79-8e98-475f-b485-0a370a2432b6
 @query begin
 	visit()
-	define(ext.is_historical)
+	define(ext.is_preepic)
 	define(care_site.care_site_name)
-	concept_set_pivot($visit_concepts; group=[is_historical, care_site_name])
+	concept_set_pivot($visit_concepts; group=[is_preepic, care_site_name])
 end
 
 # ╔═╡ a91d84d7-a569-46bf-940f-d9d2dd30e407
 @query begin
 	visit()
-	define(ext.is_historical)
+	define(ext.is_preepic)
 	define(care_site.concept.concept_name)
-	concept_set_pivot($visit_concepts; group=[is_historical, concept_name])
+	concept_set_pivot($visit_concepts; group=[is_preepic, concept_name])
 end
 
 # ╔═╡ 21a3e508-9daf-4fe1-8b99-01bf29e12c4d
 @query begin
 	care_site()
-	define(ext.is_historical)
     define(by_name => icontains(care_site_name,
 		"primary care", "gen med", "family medicine", "internal medicine",
         "medical associates", "pediatrics", "medical group"))
 	join(v => visit($primary_visit, Visit("OP")), v.care_site_id == care_site_id)
-	group(is_historical, by_name, care_site_name, concept.concept_name)
+	group(ext.is_preepic, by_name, care_site_name, concept.concept_name)
 	rounded_count(10000)
 end
 
 # ╔═╡ ee09b084-6118-47ea-bed3-949c4e68734b
 @query begin
 	visit($primary_visit, Visit("OP"))
-	filter(ext.is_historical)
+	filter(ext.is_preepic)
 	group(speciality => provider.concept.concept_name)
 	rounded_count(10000)
 end
@@ -235,7 +240,7 @@ end
 # ╔═╡ d972ce8f-edfc-4adc-91f7-da206196de77
 @query begin
 	visit($primary_visit, Visit("OP"))
-	filter(!ext.is_historical)
+	filter(!ext.is_preepic)
 	group(speciality => provider.concept.concept_name)
 	rounded_count(1000)
 end
@@ -250,18 +255,36 @@ end
 # ╔═╡ c69054d6-9c7e-4df3-b9ae-74a82b11ae56
 @query begin
 	visit($primary_visit, Visit("OP"))
-	define(ext.is_historical)
-	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, is_historical)
+	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
 	rounded_count(10000)
-
 end
 
 # ╔═╡ add69180-b3ca-4a12-8722-7be9389ab04c
 @query begin
 	visit_detail($primary_visit, Visit("OP"))
-	define(ext.is_historical)
-	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, is_historical)
+	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
 	rounded_count(1000)
+end
+
+# ╔═╡ a84c9b8b-eab4-4e07-b298-23ccd389d38d
+@query begin
+	visit($primary_visit, Visit("OP"))
+	group(omop.visit_source_value, ext.is_preepic)
+	rounded_count(1000)
+end
+
+# ╔═╡ 97e05b97-40cc-4f76-84d8-5d60d582e5d3
+@query begin
+	visit_detail($primary_visit, Visit("OP"))
+	group(provider.omop.specialty_source_value, ext.is_preepic)
+	rounded_count(1000)
+end
+
+# ╔═╡ 3ca33947-ada6-4fae-890f-82f9c7ca7c22
+@query begin
+	visit_detail($primary_visit, Visit("OP"))
+	group(concept_id => provider.omop.specialty_source_concept_id, ext.is_preepic)
+	select_concept(concept_id, count => roundups(count()), is_preepic; order=[count().desc()])
 end
 
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
@@ -304,6 +327,11 @@ end
 # ╠═c69054d6-9c7e-4df3-b9ae-74a82b11ae56
 # ╟─80ffbc9e-1d97-46ea-8a5e-168f5b1d3b66
 # ╠═add69180-b3ca-4a12-8722-7be9389ab04c
+# ╟─67b624ac-12ca-48b2-b64d-856af4a750ed
+# ╠═a84c9b8b-eab4-4e07-b298-23ccd389d38d
+# ╠═97e05b97-40cc-4f76-84d8-5d60d582e5d3
+# ╟─e0ea032b-d7fb-43c9-afd2-80fb1c8ed16e
+# ╠═3ca33947-ada6-4fae-890f-82f9c7ca7c22
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
 # ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13

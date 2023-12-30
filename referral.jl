@@ -91,23 +91,23 @@ end
 
 
 # ╔═╡ 2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
-@query observation($referral_concepts).group(pre_epic => observation_id > 1500000000).define(count())
+@query observation($referral_concepts).group(ext.is_preepic).define(roundups(count()))
 
 # ╔═╡ 0e1f40c4-085a-4597-9fe4-a80b03204a0d
 @query begin
     observation($referral_concepts)
-	group(observation_concept_id, value_as_string)
-	define(n_referrals_to_dept => count())
+	group(concept_id, value_as_string)
 	order(count().desc())
+	define(n_referrals_to_dept => roundups(count()))
 end
 
 # ╔═╡ 1ff00dca-7c61-4582-aaba-19e09c2cd46b
 @query begin
     observation($referral_concepts)
 	filter(icontains(value_as_string, "card"))
-	group(observation_concept_id, value_as_string)
-	define(n_referrals_to_dept => count())
+	group(concept_id, value_as_string)
 	order(count().desc())
+	define(n_referrals_to_dept => roundups(count()))
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
@@ -124,7 +124,7 @@ end
 # ╟─ae690146-918a-4223-b2a1-1d6acad00983
 # ╠═0e1f40c4-085a-4597-9fe4-a80b03204a0d
 # ╟─9e0c1ceb-21b2-455a-8b0b-2458eb67abf8
-# ╠═466e70b2-ac30-4545-ba54-ec9fe47f9824
+# ╟─466e70b2-ac30-4545-ba54-ec9fe47f9824
 # ╠═1ff00dca-7c61-4582-aaba-19e09c2cd46b
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
 # ╟─c6f49bb2-783a-11ee-0151-47703d60127f
