@@ -95,13 +95,13 @@ end
 
 
 # ╔═╡ 2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
-@query observation($allergy_concepts).group(pre_epic => observation_id > 1500000000).define(count())
+@query observation($allergy_concepts).group(ext.is_preepic).define(count())
 
 # ╔═╡ d19520ed-7353-4c2e-a08c-5b08bd219996
-@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).group(pre_epic => observation_id > 1500000000).define(count())
+@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).group(ext.is_preepic).define(count())
 
 # ╔═╡ fe87fb24-0c9e-456c-afc7-3e5bd5955e3e
-@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).count_concept(observation)
+@query observation($allergy_concepts).filter(isnotnull(value_as_concept_id)).count_concept()
 
 # ╔═╡ 0e1f40c4-085a-4597-9fe4-a80b03204a0d
  @query begin
@@ -112,8 +112,8 @@ end
 # ╔═╡ fa42532e-e4e9-4d37-9dd3-24b22506baf2
  @query begin
     observation(SNOMED(91936005, "Allergy to penicillin"))
-    filter(post_epic => observation_id < 1500000000)
-    count_concept(observation)
+    filter(!ext.is_preepic)
+    count_concept()
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
@@ -125,20 +125,16 @@ end
  @aquery begin
     observation($allergy_concepts)
     filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
-    filter(pre_epic => observation_id > 1500000000)
-    group(observation_concept_id, value_as_string)
-    order(count().desc())
-    define(n_event => roundups(count()))
+    filter(ext.is_preepic)
+    count_concept(concept_id, value_as_string)
 end
 
 # ╔═╡ 5a947b47-ce4b-4a16-9d43-9095cd2f5340
  @aquery begin
     observation(SNOMED(609328004, "Allergic disposition"))
     filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
-    filter(post_epic => observation_id < 1500000000)
-    group(observation_concept_id, value_as_string)
-    order(count().desc())
-    define(n_event => roundups(count()))
+    filter(!ext.is_preepic)
+    count_concept(concept_id, value_as_string)
 end
 
 # ╔═╡ Cell order:

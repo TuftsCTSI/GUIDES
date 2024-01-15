@@ -2,7 +2,7 @@ pluto:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); using Pluto; Pluto.run()'
 
 julia:
-	julia --project=. -e "using Pkg; Pkg.instantiate(); using Revise; using TRDW;" -i
+	julia --project=. -e "using Pkg; Pkg.instantiate(); using FunSQL, Revise; using TRDW;" -i
 
 pkg_update:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.update();'
@@ -15,6 +15,9 @@ develop_trdw:
 
 discover.html:
 	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("discover.jl"; Export_offer_binder = false)'
+
+summary.html:
+	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("summary.jl"; Export_offer_binder = false)'
 
 export.html:
 	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("export.jl"; Export_offer_binder = false)'

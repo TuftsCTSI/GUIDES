@@ -89,46 +89,33 @@ end
 
 # ╔═╡ e2a29e89-036d-4d6d-9176-8c0ec666f87c
 @query begin
-    concept()
-    filter(icontains(concept_name, "smoking", "smoke", "tobacco"))
-    join(obs => begin
-        observation()
-        group(observation_concept_id)
-    end, concept_id == obs.observation_concept_id)
-    define(n_event => obs.count())
-    define(n_person => obs.count_distinct(person_id))
-    order(n_person.desc())
-    select(n_person => roundups(n_person), concept_id, vocabulary_id, concept_class_id, concept_code, concept_name)
+    observation()
+    filter(icontains(concept.concept_name, "smoking", "smoke", "tobacco"))
+    count_concept()
 end
 
 # ╔═╡ d2e766e1-33eb-4bf8-8027-918228503973
 @query begin
     observation()
-    filter(observation_matches($findings_of_tobacco))
-    count_concept(observation_concept_id)
+    filter(concept_matches($findings_of_tobacco))
+    count_concept()
 end
 
 # ╔═╡ e1cec40e-393b-449b-840f-31af11276b5f
 @query begin
     observation()
-    filter(observation_matches($findings_of_tobacco))
-    group(observation_concept_id, value_as_concept_id)
-    define(n_event => count())
-    left_join(main => concept(), main.concept_id == observation_concept_id)
-    left_join(value => concept(), value.concept_id == value_as_concept_id)
-    order(isnull(value.vocabulary_id), n_event.desc())
-    select(n_event => roundups(n_event),
-        observation_concept_id, observation_concept => concat(left(main.concept_name, 19), "..."),
-        value.concept_id, value.vocabulary_id, value.concept_code, value.concept_name)
+    filter(concept_matches($findings_of_tobacco))
+    define(primary_concept => concat(left(concept.concept_name, 19), "..."))
+    count_concept(value_as_concept_id, primary_concept)
 end
 
 # ╔═╡ 0575f567-30c1-4d3f-a091-046d82492104
 @query begin
     observation()
-    filter(observation_concept_id == $findings_of_tobacco &&
-           (is_null(value_as_concept_id) || value_as_concept_id == 0))
-    group(value_as_concept_id, value_as_string, value_as_number, observation_source_value)
-    define(n_event => roundups(count()))
+    define(source_value => omop.observation_source_value)
+    filter(concept_matches($findings_of_tobacco))
+    filter((is_null(value_as_concept_id) || value_as_concept_id == 0))
+    count_concept(value_as_concept_id, value_as_string, value_as_number, source_value)
 end
 
 

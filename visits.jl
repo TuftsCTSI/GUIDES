@@ -42,12 +42,12 @@ md"""It seems hard to know exactly which visits might be for primary care."""
 # ╔═╡ 86ad1b0f-b397-4c15-ad61-306470c1173a
 primary_visit = @concepts [
         CMS_Place_of_Service("02","Telehealth"),
-		CMS_Place_of_Service("49","Independent Clinic"),
-		Medicare_Specialty("70","Clinic or Group Practice"),
+        CMS_Place_of_Service("49","Independent Clinic"),
+        Medicare_Specialty("70","Clinic or Group Practice"),
         Visit("OMOP4822459","Home Visit"),
-		Visit("OMOP4822458","Office Visit"),
-		Visit("HE","Health examination"),
-	]
+        Visit("OMOP4822458","Office Visit"),
+        Visit("HE","Health examination"),
+    ]
 
 # ╔═╡ 70d4d76a-554a-4748-a946-695769c4621b
 md"""We could break this down by category of office, hospital, and other"""
@@ -55,29 +55,29 @@ md"""We could break this down by category of office, hospital, and other"""
 # ╔═╡ 4b11dc23-00fd-4eaf-a4a4-e6417eafd246
 visit_concepts = @concepts begin
     primary = [ primary_visit ]
-	hospital = [
-		CMS_Place_of_Service("OMOP4822036","Observation Room"),
+    hospital = [
+        CMS_Place_of_Service("OMOP4822036","Observation Room"),
         Visit("ER","Emergency Room Visit"),
         Visit("IP","Inpatient Visit"),
-		Visit("ERIP","Emergency Room and Inpatient Visit")
-	]
-	hospice = [
-		CMS_Place_of_Service("34","Hospice"),
-		NUCC("315D00000X","Inpatient Hospice"),
-	]
-	labs = [
-		Visit("OMOP4822461","Laboratory Visit"),
-	]
-	pharmacy = [
+        Visit("ERIP","Emergency Room and Inpatient Visit")
+    ]
+    hospice = [
+        CMS_Place_of_Service("34","Hospice"),
+        NUCC("315D00000X","Inpatient Hospice"),
+    ]
+    labs = [
+        Visit("OMOP4822461","Laboratory Visit"),
+    ]
+    pharmacy = [
         Visit("OMOP4822462","Pharmacy visit"),
-	]
-	other = [
-		NUCC("261Q00000X", "Ambulatory Clinic / Center"),
-	]
-	outpatient = [
-		# this double-counts many of the above due to OP
+    ]
+    other = [
+        NUCC("261Q00000X", "Ambulatory Clinic / Center"),
+    ]
+    outpatient = [
+        # this double-counts many of the above due to OP
         Visit("OP","Outpatient Visit"),
-	]
+    ]
 end
 
 # ╔═╡ 618042b4-fad9-4c47-98d7-58cd59752e41
@@ -109,9 +109,9 @@ md"""Let's look at a few care sites with names that seem like they may do primar
 
 # ╔═╡ 80de563c-9f6e-4be9-ba08-19178e99d40f
 @funsql rounded_count(threshold) = begin
-	filter(count()> $threshold)
-	order(count().desc())
-	define(n_visit => roundups(count()))
+    filter(count()> $threshold)
+    order(count().desc())
+    define(n_visit => roundups(count()))
 end
 
 # ╔═╡ d49ebd20-f986-4ed8-92c7-e7a56d56f0e9
@@ -149,142 +149,142 @@ end
 
 # ╔═╡ d2462cf5-0881-4d66-9943-2b7f40137566
 @query begin
-	visit()
+    visit()
     count_concept()
 end
 
 # ╔═╡ edf8c6c4-b4c6-4db9-bb56-0d5d5b7a647d
 @query begin
-	visit()
-	filter(!concept_matches($visit_concepts))
-    count_concept()	
+    visit()
+    filter(!concept_matches($visit_concepts))
+    count_concept()
 end
 
 # ╔═╡ 96cca9f0-5bf7-4755-97f4-9a4a44b747b6
 @query begin
-	concept()
-	filter(concept_matches($primary_visit) || concept_matches(Visit("OP", "Outpatient Visit")))
+    concept()
+    filter(concept_matches($primary_visit) || concept_matches(Visit("OP", "Outpatient Visit")))
     filter_out_descendants()
-end	
+end
 
 # ╔═╡ 710a22cc-d38c-498a-a4ea-75fbd6c61a18
 @query begin
     visit()
-	filter(concept_matches($visit_concepts))
-	group(concept_id)
-	filter(!concept_matches(Visit("OP"), Visit("ER"), Visit("IP"), Visit("ERIP")))
-	select_concept()
+    filter(concept_matches($visit_concepts))
+    group(concept_id)
+    filter(!concept_matches(Visit("OP"), Visit("ER"), Visit("IP"), Visit("ERIP")))
+    select_concept()
 end
 
 # ╔═╡ ee2618bb-29e5-4866-91f6-0fca32a3ec26
 @query begin
-	visit()
-	define(ext.is_preepic)
-	define(visit_name => 
-	    replace(type_concept.concept_name, "Visit derived from ", ""))
-	concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
+    visit()
+    define(ext.is_preepic)
+    define(visit_name =>
+        replace(type_concept.concept_name, "Visit derived from ", ""))
+    concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
 end
 
 # ╔═╡ 87bc697d-f238-4a7b-8e44-545e133f64be
 @query begin
-	visit_detail()
-	define(ext.is_preepic)
-	define(visit_name => 
-	    replace(type_concept.concept_name, "Visit derived from ", ""))
-	concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
+    visit_detail()
+    define(ext.is_preepic)
+    define(visit_name =>
+        replace(type_concept.concept_name, "Visit derived from ", ""))
+    concept_set_pivot($visit_concepts; group=[is_preepic, visit_name])
 end
 
 # ╔═╡ 04076e79-2e2a-49eb-acc1-bec1defdee30
 @query begin
-	care_site()
-	group(concept_id, ext.is_preepic)
-	select_concept(concept_id, is_preepic, count())
-	order(count.desc())
+    care_site()
+    group(concept_id, ext.is_preepic)
+    select_concept(concept_id, is_preepic, count())
+    order(count.desc())
 end
 
 # ╔═╡ 8db3cb79-8e98-475f-b485-0a370a2432b6
 @query begin
-	visit()
-	define(ext.is_preepic)
-	define(care_site.care_site_name)
-	concept_set_pivot($visit_concepts; group=[is_preepic, care_site_name])
+    visit()
+    define(ext.is_preepic)
+    define(care_site.care_site_name)
+    concept_set_pivot($visit_concepts; group=[is_preepic, care_site_name])
 end
 
 # ╔═╡ a91d84d7-a569-46bf-940f-d9d2dd30e407
 @query begin
-	visit()
-	define(ext.is_preepic)
-	define(care_site.concept.concept_name)
-	concept_set_pivot($visit_concepts; group=[is_preepic, concept_name])
+    visit()
+    define(ext.is_preepic)
+    define(care_site.concept.concept_name)
+    concept_set_pivot($visit_concepts; group=[is_preepic, concept_name])
 end
 
 # ╔═╡ 21a3e508-9daf-4fe1-8b99-01bf29e12c4d
 @query begin
-	care_site()
+    care_site()
     define(by_name => icontains(care_site_name,
-		"primary care", "gen med", "family medicine", "internal medicine",
+        "primary care", "gen med", "family medicine", "internal medicine",
         "medical associates", "pediatrics", "medical group"))
-	join(v => visit($primary_visit, Visit("OP")), v.care_site_id == care_site_id)
-	group(ext.is_preepic, by_name, care_site_name, concept.concept_name)
-	rounded_count(10000)
+    join(v => visit($primary_visit, Visit("OP")), v.care_site_id == care_site_id)
+    group(ext.is_preepic, by_name, care_site_name, concept.concept_name)
+    rounded_count(10000)
 end
 
 # ╔═╡ ee09b084-6118-47ea-bed3-949c4e68734b
 @query begin
-	visit($primary_visit, Visit("OP"))
-	filter(ext.is_preepic)
-	group(speciality => provider.concept.concept_name)
-	rounded_count(10000)
+    visit($primary_visit, Visit("OP"))
+    filter(ext.is_preepic)
+    group(speciality => provider.concept.concept_name)
+    rounded_count(10000)
 end
 
 # ╔═╡ d972ce8f-edfc-4adc-91f7-da206196de77
 @query begin
-	visit($primary_visit, Visit("OP"))
-	filter(!ext.is_preepic)
-	group(speciality => provider.concept.concept_name)
-	rounded_count(1000)
+    visit($primary_visit, Visit("OP"))
+    filter(!ext.is_preepic)
+    group(speciality => provider.concept.concept_name)
+    rounded_count(1000)
 end
 
 # ╔═╡ 91e24f57-dc24-45f5-86f0-16d8c1284c6c
 @query begin
-	visit($primary_visit, Visit("OP"))
-	group(provider.concept_id)
-	select_concept(concept_id, count => roundups(count()); order=[count().desc()])
+    visit($primary_visit, Visit("OP"))
+    group(provider.concept_id)
+    select_concept(concept_id, count => roundups(count()); order=[count().desc()])
 end
 
 # ╔═╡ c69054d6-9c7e-4df3-b9ae-74a82b11ae56
 @query begin
-	visit($primary_visit, Visit("OP"))
-	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
-	rounded_count(10000)
+    visit($primary_visit, Visit("OP"))
+    group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
+    rounded_count(10000)
 end
 
 # ╔═╡ add69180-b3ca-4a12-8722-7be9389ab04c
 @query begin
-	visit_detail($primary_visit, Visit("OP"))
-	group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
-	rounded_count(1000)
+    visit_detail($primary_visit, Visit("OP"))
+    group(speciality => provider.concept.concept_name, visit_concept => concept.concept_name, ext.is_preepic)
+    rounded_count(1000)
 end
 
 # ╔═╡ a84c9b8b-eab4-4e07-b298-23ccd389d38d
 @query begin
-	visit($primary_visit, Visit("OP"))
-	group(omop.visit_source_value, ext.is_preepic)
-	rounded_count(1000)
+    visit($primary_visit, Visit("OP"))
+    group(omop.visit_source_value, ext.is_preepic)
+    rounded_count(1000)
 end
 
 # ╔═╡ 97e05b97-40cc-4f76-84d8-5d60d582e5d3
 @query begin
-	visit_detail($primary_visit, Visit("OP"))
-	group(provider.omop.specialty_source_value, ext.is_preepic)
-	rounded_count(1000)
+    visit_detail($primary_visit, Visit("OP"))
+    group(provider.omop.specialty_source_value, ext.is_preepic)
+    rounded_count(1000)
 end
 
 # ╔═╡ 3ca33947-ada6-4fae-890f-82f9c7ca7c22
 @query begin
-	visit_detail($primary_visit, Visit("OP"))
-	group(concept_id => provider.omop.specialty_source_concept_id, ext.is_preepic)
-	select_concept(concept_id, count => roundups(count()), is_preepic; order=[count().desc()])
+    visit_detail($primary_visit, Visit("OP"))
+    group(concept_id => provider.omop.specialty_source_concept_id, ext.is_preepic)
+    select_concept(concept_id, count => roundups(count()), is_preepic; order=[count().desc()])
 end
 
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101

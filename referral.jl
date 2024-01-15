@@ -96,18 +96,18 @@ end
 # ╔═╡ 0e1f40c4-085a-4597-9fe4-a80b03204a0d
 @query begin
     observation($referral_concepts)
-	group(concept_id, value_as_string)
-	order(count().desc())
-	define(n_referrals_to_dept => roundups(count()))
+    group(concept_id, value_as_string)
+    order(count().desc())
+    define(n_referrals_to_dept => roundups(count()))
 end
 
 # ╔═╡ 1ff00dca-7c61-4582-aaba-19e09c2cd46b
 @query begin
     observation($referral_concepts)
-	filter(icontains(value_as_string, "card"))
-	group(concept_id, value_as_string)
-	order(count().desc())
-	define(n_referrals_to_dept => roundups(count()))
+    filter(icontains(value_as_string, "card"))
+    group(concept_id, value_as_string)
+    order(count().desc())
+    define(n_referrals_to_dept => roundups(count()))
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
