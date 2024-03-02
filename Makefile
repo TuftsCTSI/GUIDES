@@ -1,10 +1,16 @@
 pluto:
-	julia --project=. -e 'using Pkg; Pkg.instantiate(); using Pluto; Pluto.run()'
+	JULIA_COPY_STACKS=1 julia -e 'using Pluto; Pluto.run()'
 
 julia:
-	julia --project=. -e "using Pkg; Pkg.instantiate(); using FunSQL, Revise; using TRDW;" -i
+	JULIA_COPY_STACKS=1 julia --project=. -e "using Pkg; Pkg.instantiate(); using FunSQL, Revise; using TRDW;" -i
+
+environment:
+	julia  -e 'using Pkg; Pkg.add(url="https://github.com/MechanicalRabbit/Pluto.jl.git#funsql")'
+	julia  -e 'using Pkg; Pkg.add("PlutoSliderServer")'
+	julia  -e 'using Pkg; Pkg.add("JavaCall")' # needed for encrypted excel and Circe
 
 pkg_update:
+	-julia --project=. -e 'using Pkg; Pkg.rm("Pluto")' > /dev/null 2> /dev/null # remove local Pluto
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.update();'
 
 latest_trdw:
@@ -13,14 +19,8 @@ latest_trdw:
 develop_trdw:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.develop(path="${HOME}/TRDW.jl")'
 
-discover.html:
-	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("discover.jl"; Export_offer_binder = false)'
-
-summary.html:
-	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("summary.jl"; Export_offer_binder = false)'
-
-export.html:
-	julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("export.jl"; Export_offer_binder = false)'
+%.html: %.jl
+	JULIA_COPY_STACKS=1 julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("$<"; Export_offer_binder = false)'
 
 clean:
 	rm -f *.html *.7z *.zip exported.txt *.csv
