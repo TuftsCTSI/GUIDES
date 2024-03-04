@@ -7,10 +7,11 @@ julia:
 environment:
 	julia  -e 'using Pkg; Pkg.add(url="https://github.com/MechanicalRabbit/Pluto.jl.git#funsql")'
 	julia  -e 'using Pkg; Pkg.add("PlutoSliderServer")'
-	julia  -e 'using Pkg; Pkg.add("JavaCall")' # needed for encrypted excel and Circe
 
 pkg_update:
 	-julia --project=. -e 'using Pkg; Pkg.rm("Pluto")' > /dev/null 2> /dev/null # remove local Pluto
+	-julia --project=. -e 'using Pkg; Pkg.rm("PlutoSliderServer")' > /dev/null 2> /dev/null
+	-julia --project=. -e 'using Pkg; Pkg.add("JavaCall")' # needed for encrypted excel and Circe
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.update();'
 
 latest_trdw:
