@@ -16,6 +16,8 @@ pkg_update:
 
 latest_trdw:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git")'
+revised_trdw:
+	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git#connect-macro")'
 
 develop_trdw:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.develop(path="${HOME}/TRDW.jl")'

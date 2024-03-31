@@ -1,0 +1,12 @@
+*.txt
+*.pdf
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.html
+*.bak
+*backup*.jl
+*.zip
+*.7z
+*.png

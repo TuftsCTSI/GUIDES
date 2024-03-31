@@ -98,9 +98,9 @@ version = "1.1.0+0"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
-git-tree-sha1 = "9c4708e3ed2b799e6124b5673a712dda0b596a9b"
+git-tree-sha1 = "6cbbd4d241d7e6579ab354737f4dd95ca43946e1"
 uuid = "f0e56b4a-5159-44fe-b623-3e5288b988bb"
-version = "2.3.1"
+version = "2.4.1"
 
 [[deps.Crayons]]
 git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
@@ -108,9 +108,9 @@ uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
 version = "4.1.1"
 
 [[deps.DBInterface]]
-git-tree-sha1 = "6f93ab5557fa0ffd02e3d751186f329ac21da791"
+git-tree-sha1 = "a444404b3f94deaa43ca2a58e18153a82695282b"
 uuid = "a10d1c49-ce27-4219-8d33-6db1a4562965"
-version = "2.6.0"
+version = "2.6.1"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "abe83f3a2f1b857aac70ef8b269080af17764bbe"
@@ -125,9 +125,9 @@ version = "1.6.1"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
-git-tree-sha1 = "1fb174f0d48fe7d142e1109a10636bc1d14f5ac2"
+git-tree-sha1 = "0f4b5d62a88d8f59003e43c25a8a90de9eb76317"
 uuid = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
-version = "0.18.17"
+version = "0.18.18"
 
 [[deps.DataValueInterfaces]]
 git-tree-sha1 = "bfc1187b79289637fa0ef6d4436ebdfe6905cbd6"
@@ -194,9 +194,9 @@ version = "0.8.4"
 
 [[deps.FunSQL]]
 deps = ["DBInterface", "Dates", "LRUCache", "OrderedCollections", "PrettyPrinting", "Tables"]
-git-tree-sha1 = "002cb75f109ae8a19cb9b04962f6f53922210e48"
+git-tree-sha1 = "d07be077a345fe15ccca08737800df6374253b49"
 uuid = "cf6cc811-59f4-4a10-b258-a8547a8f6407"
-version = "0.13.0"
+version = "0.13.1"
 
 [[deps.Future]]
 deps = ["Random"]
@@ -204,9 +204,9 @@ uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
 
 [[deps.HTTP]]
 deps = ["Base64", "CodecZlib", "ConcurrentUtilities", "Dates", "ExceptionUnwrapping", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
-git-tree-sha1 = "db864f2d91f68a5912937af80327d288ea1f3aee"
+git-tree-sha1 = "8e59b47b9dc525b70550ca082ce85bcd7f5477cd"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "1.10.3"
+version = "1.10.5"
 
 [[deps.Hyperscript]]
 deps = ["Test"]
@@ -271,9 +271,9 @@ version = "0.8.0"
 
 [[deps.JuliaInterpreter]]
 deps = ["CodeTracking", "InteractiveUtils", "Random", "UUIDs"]
-git-tree-sha1 = "7b762d81887160169ddfc93a47e5fd7a6a3e78ef"
+git-tree-sha1 = "e9648d90370e2d0317f9518c9c6e0841db54a90b"
 uuid = "aa1ae85d-cabe-5617-a682-6adf51b2e16a"
-version = "0.9.29"
+version = "0.9.31"
 
 [[deps.LRUCache]]
 git-tree-sha1 = "b3cc6698599b10e652832c2f23db3cab99d51b59"
@@ -478,9 +478,9 @@ version = "0.1.6"
 
 [[deps.PlutoPlotly]]
 deps = ["AbstractPlutoDingetjes", "BaseDirs", "Colors", "Dates", "Downloads", "HypertextLiteral", "InteractiveUtils", "LaTeXStrings", "Markdown", "Pkg", "PlotlyBase", "Reexport", "TOML"]
-git-tree-sha1 = "fbf637823ec24c5669b1a66f3771c2306f60857c"
+git-tree-sha1 = "1ae939782a5ce9a004484eab5416411c7190d3ce"
 uuid = "8e989ff0-3d88-8e9f-f020-2b208a939ff0"
-version = "0.4.5"
+version = "0.4.6"
 
     [deps.PlutoPlotly.extensions]
     PlotlyKaleidoExt = "PlotlyKaleido"
@@ -504,9 +504,9 @@ version = "1.4.3"
 
 [[deps.PrecompileTools]]
 deps = ["Preferences"]
-git-tree-sha1 = "03b4c25b43cb84cee5c90aa9b5ea0a78fd848d2f"
+git-tree-sha1 = "5aa36f7049a63a1528fe8f7c3f2113413ffd4e1f"
 uuid = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
-version = "1.2.0"
+version = "1.2.1"
 
 [[deps.Preferences]]
 deps = ["TOML"]
@@ -633,9 +633,9 @@ version = "1.0.3"
 
 [[deps.TRDW]]
 deps = ["CSV", "Chain", "DBInterface", "DataFrames", "Dates", "FunSQL", "HTTP", "HypertextLiteral", "JSON", "LightXML", "Markdown", "ODBC", "Pkg", "PlutoLinks", "PlutoPlotly", "PlutoUI", "Revise", "StringEncodings", "Tables"]
-git-tree-sha1 = "b275a4c2306fc7ae445250c459409d1f2d8a7d37"
+git-tree-sha1 = "fd0dc3cbe312cc6fd1f1d9c9424fe17c154360ca"
 repo-rev = "main"
-repo-url = "https://github.com/TuftsCTSI/TRDW.jl.git"
+repo-url = "https://github.com/TuftsCTSI/TRDW.jl.git#connect-macro"
 uuid = "0719a0bd-20d8-4d8e-abe7-d82c18a4d09f"
 version = "0.0.0"
 weakdeps = ["JavaCall"]
@@ -677,9 +677,9 @@ deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [[deps.TranscodingStreams]]
-git-tree-sha1 = "54194d92959d8ebaa8e26227dbe3cdefcdcd594f"
+git-tree-sha1 = "71509f04d045ec714c4748c785a59045c3736349"
 uuid = "3bb67fe8-82b1-5028-8e26-92a6c54297fa"
-version = "0.10.3"
+version = "0.10.7"
 weakdeps = ["Random", "Test"]
 
     [deps.TranscodingStreams.extensions]
@@ -726,9 +726,9 @@ version = "1.6.1"
 
 [[deps.XML2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Zlib_jll"]
-git-tree-sha1 = "07e470dabc5a6a4254ffebc29a1b3fc01464e105"
+git-tree-sha1 = "532e22cf7be8462035d092ff21fada7527e2c488"
 uuid = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
-version = "2.12.5+0"
+version = "2.12.6+0"
 
 [[deps.ZipFile]]
 deps = ["Libdl", "Printf", "Zlib_jll"]
