@@ -2,13 +2,14 @@
 # v0.19.38
 
 #> [frontmatter]
-#> order = "10"
-#> title = "TRDW Inventory"
+#> order = "1"
+#> title = "TRDW Overview"
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ cdb19516-2411-11ee-1c6c-4f2a4b62200a
+# ╠═╡ show_logs = false
 begin
     using Pkg
     Pkg.activate(Base.current_project("."))
@@ -25,19 +26,17 @@ begin
     using CSV
     using Revise
     using TRDW
-    # default pluto style doesn't use full width
-    TRDW.WideStyle() 
 end
 
 # ╔═╡ 5506a86d-5464-403b-99f2-c569ecc8d357
 begin
-    const TITLE = "TRDW Guide"
-	const SUBTITLE = "Inventory of EHR Data by intermediate concepts"
+    const TITLE = "Clinical Data Inventory of TRDW"
+	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
 	const IRB = 11642
-	export TITLE, SUBTITLE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE, SUBTITLE; case=CASE, sfid=SFID, irb=IRB)
+	export TITLE, STUDY, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID, IRB)
 end
 
 # ╔═╡ f99deebf-880e-43be-9287-71ae128a12ea
@@ -50,7 +49,7 @@ md"""## Cohort Definition & Summary Counts"""
 md"""
 !!! note "Cohort Definition"
     This cohort includes patient records from the Tufts Research Data Warehouse (TRDW) that:
-    - have at least one encounter (clinic, emergency, inpatient) record
+    - have at least one encounter (clinic, emergency, inpatient, prescription) record
 """
 
 # ╔═╡ 9f497e6c-d025-4956-b4e9-16eb3af11452
@@ -161,20 +160,11 @@ md"""
 Notebook implementation details.
 """
 
-# ╔═╡ fa65a99d-f6af-4c0b-b59f-842419fb7413
-PlutoUI.TableOfContents() # aside=false shows TOC at the top
-
-# ╔═╡ 6c4405af-18ac-4631-b680-638d3299276d
-md"""Load various libraries our notebook uses."""
-
-# ╔═╡ 78a6abe7-b934-408a-ad2b-4e0ef3bbf71e
-md"""Choose a database and connect to it."""
-
 # ╔═╡ a2ed12e7-7591-4a76-a2e3-7e91410c47a3
-DATA_WAREHOUSE = "ctsi.trdw_green" # this database has shifted dates/times but no other PHI
-
-# ╔═╡ ca763b44-6261-4e00-87a8-a86b3c84659b
-@connect DATA_WAREHOUSE
+begin
+    DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
+	@connect DATA_WAREHOUSE
+end
 
 # ╔═╡ e9eaca17-b929-40c6-971a-6c88f84f80aa
 # ╠═╡ skip_as_script = true
@@ -293,10 +283,10 @@ end
   ╠═╡ =#
 
 # ╔═╡ fe876afa-b56f-47d1-85ef-83556798f8c4
-TRDW.NotebookFooter(; case=CASE, sfid=SFID)
+TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
-# ╟─5506a86d-5464-403b-99f2-c569ecc8d357
+# ╠═5506a86d-5464-403b-99f2-c569ecc8d357
 # ╟─f99deebf-880e-43be-9287-71ae128a12ea
 # ╟─92166f39-6a99-403d-aef5-1c9603ef5f78
 # ╟─bfa24190-e9a8-44f4-b4b1-2f6473a3619b
@@ -333,11 +323,7 @@ TRDW.NotebookFooter(; case=CASE, sfid=SFID)
 # ╟─48f17065-25fb-4b85-89dc-15d4e6d5ae0f
 # ╠═5a2bd698-21bd-46f3-99f2-cefe0ca152ec
 # ╟─a63c96b8-f70e-47b3-a56d-52419b970975
-# ╠═fa65a99d-f6af-4c0b-b59f-842419fb7413
-# ╟─6c4405af-18ac-4631-b680-638d3299276d
 # ╠═cdb19516-2411-11ee-1c6c-4f2a4b62200a
 # ╠═8ec6f9c4-2d9c-4e0c-96d3-19012b4f8452
-# ╟─78a6abe7-b934-408a-ad2b-4e0ef3bbf71e
-# ╟─a2ed12e7-7591-4a76-a2e3-7e91410c47a3
-# ╠═ca763b44-6261-4e00-87a8-a86b3c84659b
+# ╠═a2ed12e7-7591-4a76-a2e3-7e91410c47a3
 # ╟─fe876afa-b56f-47d1-85ef-83556798f8c4
