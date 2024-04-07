@@ -26,4 +26,4 @@ develop_trdw:
 	JULIA_COPY_STACKS=1 julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("$<"; Export_offer_binder = false)'
 
 clean:
-	rm -f *.html *.7z *.zip exported.txt *.csv
+	rm -f *.html *.7z *.zip exported.txt *.csv *.xlsx

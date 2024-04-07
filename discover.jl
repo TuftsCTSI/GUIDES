@@ -71,13 +71,19 @@ md"""
 
 > The [Condition](https://ohdsi.github.io/CommonDataModel/cdm54.html#CONDITION_OCCURRENCE) domain captures information about a person suggesting the presence of a disease or medical condition stated as a diagnosis, a sign, or a symptom, which is either observed by a provider or reported by the patient.
 
-In OHDSI, the *SNOMED* vocabulary is the primary vocabulary used for standard concepts. Often source concepts use the *ICD10CM* vocabulary. Specifying concept sets using any mix of concepts is permitted.
+In OHDSI, the *SNOMED* vocabulary is the primary vocabulary used for standard concepts. The *ICD10CM* vocabulary is often used for *source* concepts. We often use 3 character ICD10CM concept categories.
 """
+
+# ╔═╡ 8f422843-1f17-410d-acc6-87fb7c777bac
+md"""Following concept sets are defined with these 3 character ICD10CM categories."""
 
 # ╔═╡ 55ddb2aa-0089-4917-9466-731d682ef1a5
 md"""
 Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD are shown in SNOMED.
 """
+
+# ╔═╡ 99103b74-9e10-4c58-94f9-850c5cd2c403
+begin Revise.retry(); TRDW.funsql_export(); end
 
 # ╔═╡ 5307be8f-68b4-42f7-a95f-b3a659dfe637
 md"""
@@ -193,6 +199,31 @@ end
 @query index().stratify_by_ethnicity()
   ╠═╡ =#
 
+# ╔═╡ 244c0f09-603b-4dbb-ba54-4b3775691a81
+icd10cm = @query concept_sets(
+	infectious_and_parasitic = ICD10CM("A00-B99"),
+	neoplasms = ICD10CM("C00-D49"),
+	blood_and_immune_disorders = ICD10CM("D50-D89"),
+    endocrine_and_metabolic = ICD10CM("E00-E89"),
+    mental_and_neurodevelopmental = ICD10CM("F01-F99"),
+	nervous_system = ICD10CM("G00-G99"),
+	eye_and_adnexa = ICD10CM("H60-H95"),
+	ear_and_mastoid = ICD10CM("I00-I99"),
+	respiratory_system = ICD10CM("J00-J99"),
+    digestive_system = ICD10CM("K00-K95"),
+	skin_and_subcutaneous = ICD10CM("L00-L99"),
+	musculoskeletal_and_connective = ICD10CM("M00-M99"),
+    genitourinary_system = ICD10CM("N00-N99"),
+	pregancy_birth_and_puerperium = ICD10CM("O00-O9A"),
+	perinatal_conditions = ICD10CM("P00-P96"),
+	congenital_abnormalities = ICD10CM("Q00-Q99"),
+	clinical_and_laboratory = ICD10CM("R00-R99"),
+	external_consequences = ICD10CM("S00-T88"),
+	special_purpose = ICD10CM("U00-U85"),
+	external_morbidity = ICD10CM("V00-Y99"),
+	health_status_and_services = ICD10CM("Z00-Z99")	
+)
+
 # ╔═╡ f243cc93-76ea-48ba-b191-f30c27129424
 # ╠═╡ skip_as_script = true
 #=╠═╡
@@ -219,7 +250,8 @@ end
     drug()
     to_ingredient()
     group_by_concept(; person_threshold=100)
-	define(concept_code => vocabulary_id == "SPL" ? substring(concept_code, 1, 9) : concept_code)
+	define(concept_code => vocabulary_id == "SPL" ?
+	    substring(concept_code, 1, 9) : concept_code)
 end
   ╠═╡ =#
 
@@ -282,11 +314,14 @@ end
 end
   ╠═╡ =#
 
+# ╔═╡ 0af357e4-4e4d-4c4a-93fc-457d6a2779b4
+varinfo(Val(true))
+
 # ╔═╡ fe876afa-b56f-47d1-85ef-83556798f8c4
 TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
-# ╠═5506a86d-5464-403b-99f2-c569ecc8d357
+# ╟─5506a86d-5464-403b-99f2-c569ecc8d357
 # ╟─f99deebf-880e-43be-9287-71ae128a12ea
 # ╟─92166f39-6a99-403d-aef5-1c9603ef5f78
 # ╟─bfa24190-e9a8-44f4-b4b1-2f6473a3619b
@@ -299,8 +334,11 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╠═7b6fec30-05ca-4be0-8057-2606dc2f75c0
 # ╟─7993b812-41db-4b26-9599-9c468be8c579
 # ╟─faca8760-27dc-4db7-aaeb-66b024e57fb3
+# ╟─8f422843-1f17-410d-acc6-87fb7c777bac
+# ╠═244c0f09-603b-4dbb-ba54-4b3775691a81
 # ╟─55ddb2aa-0089-4917-9466-731d682ef1a5
 # ╠═f243cc93-76ea-48ba-b191-f30c27129424
+# ╠═99103b74-9e10-4c58-94f9-850c5cd2c403
 # ╟─5307be8f-68b4-42f7-a95f-b3a659dfe637
 # ╟─791c54a7-5a2a-4a3d-929c-d80081febe8a
 # ╠═e3188763-95d7-44ed-8132-8f817d1d91e8
@@ -326,4 +364,5 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╠═cdb19516-2411-11ee-1c6c-4f2a4b62200a
 # ╠═8ec6f9c4-2d9c-4e0c-96d3-19012b4f8452
 # ╠═a2ed12e7-7591-4a76-a2e3-7e91410c47a3
+# ╠═0af357e4-4e4d-4c4a-93fc-457d6a2779b4
 # ╟─fe876afa-b56f-47d1-85ef-83556798f8c4
