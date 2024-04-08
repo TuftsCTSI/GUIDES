@@ -79,8 +79,11 @@ md"""Following concept sets are defined with these 3 character ICD10CM categorie
 
 # ╔═╡ 55ddb2aa-0089-4917-9466-731d682ef1a5
 md"""
-Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD are shown in SNOMED.
+Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD are shown in SNOMED. We use the ICD9 to ICD10 General Equivalence Mapping (GEM) so that historical data sources coded with ICD9 could be counted under ICD10 categories.
 """
+
+# ╔═╡ 744dca28-0d41-4137-9b55-ac235ff34b83
+md"""This table lists frequency of codes by ICD10 class. As above, ICD9 codes are mapped to ICD10."""
 
 # ╔═╡ 5307be8f-68b4-42f7-a95f-b3a659dfe637
 md"""
@@ -88,9 +91,6 @@ md"""
 
 > The [Device](https://ohdsi.github.io/CommonDataModel/cdm54.html#DEVICE_EXPOSURE) domain captures information about a person’s exposure to a foreign physical object or instrument which is used for diagnostic or therapeutic purposes through a mechanism beyond chemical action. Devices include implantable objects (e.g. pacemakers, stents, artificial joints), medical equipment and supplies (e.g. bandages, crutches, syringes), other instruments used in medical procedures (e.g. sutures, defibrillators) and material used in clinical care (e.g. adhesives, body material, dental material, surgical material).
 """
-
-# ╔═╡ 791c54a7-5a2a-4a3d-929c-d80081febe8a
-md"""The following is a list of clinical events which are not matched by the given critiera."""
 
 # ╔═╡ f4cc1362-2cbb-45af-9837-7a291d939927
 md"""
@@ -204,8 +204,9 @@ icd10cm = @query concept_sets(
     endocrine_and_metabolic = ICD10CM("E00-E89"),
     mental_and_neurodevelopmental = ICD10CM("F01-F99"),
 	nervous_system = ICD10CM("G00-G99"),
-	eye_and_adnexa = ICD10CM("H60-H95"),
-	ear_and_mastoid = ICD10CM("I00-I99"),
+	eye_and_adnexa = ICD10CM("H00-H59"),
+	ear_and_mastoid = ICD10CM("H60-I95"),
+    circulatory_system = ICD10CM("I00-I99"),
 	respiratory_system = ICD10CM("J00-J99"),
     digestive_system = ICD10CM("K00-K95"),
 	skin_and_subcutaneous = ICD10CM("L00-L99"),
@@ -221,12 +222,22 @@ icd10cm = @query concept_sets(
 	health_status_and_service = ICD10CM("Z00-Z99")	
 )
 
+# ╔═╡ 12ca99d3-0170-47cb-bd2e-6c1cd14a7da7
+@query begin
+    condition()
+	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
+    group(class)
+	define(n_person => count_distinct(person_id),
+		   icdcodes => collect_to_string(icd_concept.concept_code))
+	order(n_person.desc())
+end
+
 # ╔═╡ 8f7a46db-c860-41cd-9097-bf74f15db9a6
 @query begin
     condition()
-	concept_sets_breakout(icd10cm => $icd10cm; with_icd9to10gem=true)
+	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
 	to_3char_icd10cm(with_icd9to10gem=true)
-    group_by_concept(; person_threshold=100, include=[icd10cm])
+    group_by_concept(; person_threshold=2000, include=[class])
 end
 
 # ╔═╡ e3188763-95d7-44ed-8132-8f817d1d91e8
@@ -309,9 +320,6 @@ end
 end
   ╠═╡ =#
 
-# ╔═╡ 0af357e4-4e4d-4c4a-93fc-457d6a2779b4
-varinfo(Val(true))
-
 # ╔═╡ fe876afa-b56f-47d1-85ef-83556798f8c4
 TRDW.NotebookFooter(; CASE, SFID)
 
@@ -332,9 +340,10 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╟─8f422843-1f17-410d-acc6-87fb7c777bac
 # ╠═244c0f09-603b-4dbb-ba54-4b3775691a81
 # ╟─55ddb2aa-0089-4917-9466-731d682ef1a5
+# ╠═12ca99d3-0170-47cb-bd2e-6c1cd14a7da7
+# ╟─744dca28-0d41-4137-9b55-ac235ff34b83
 # ╠═8f7a46db-c860-41cd-9097-bf74f15db9a6
 # ╟─5307be8f-68b4-42f7-a95f-b3a659dfe637
-# ╟─791c54a7-5a2a-4a3d-929c-d80081febe8a
 # ╠═e3188763-95d7-44ed-8132-8f817d1d91e8
 # ╟─f4cc1362-2cbb-45af-9837-7a291d939927
 # ╟─3c8a3ae5-5683-49a3-8de4-fe64eee77c92
@@ -358,5 +367,4 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╠═cdb19516-2411-11ee-1c6c-4f2a4b62200a
 # ╠═8ec6f9c4-2d9c-4e0c-96d3-19012b4f8452
 # ╠═a2ed12e7-7591-4a76-a2e3-7e91410c47a3
-# ╠═0af357e4-4e4d-4c4a-93fc-457d6a2779b4
 # ╟─fe876afa-b56f-47d1-85ef-83556798f8c4

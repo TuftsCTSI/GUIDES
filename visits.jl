@@ -1,8 +1,8 @@
 ### A Pluto.jl notebook ###
-# v0.19.32
+# v0.19.38
 
 #> [frontmatter]
-#> order = "3"
+#> order = "20"
 #> title = "Visits"
 
 using Markdown
@@ -17,21 +17,26 @@ end
 
 # ╔═╡ f082a987-c9b6-4330-812c-f1a7aa4cfb13
 begin
+    using Dates
     using FunSQL
     using PlutoUI
     using DataFrames
+    using HypertextLiteral
     using CSV
     using Revise
     using TRDW
-    TRDW.wide_notebook_style
 end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
-md"""
-# Visit Information
-
-This notebook outlines how visits are representedthe Tufts Research Data Warehouse (TRDW).
-"""
+begin
+    const TITLE = "Visit Exploration"
+	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const CASE = "01000526"
+    const SFID = "5008Y00002NhtQ5QAJ"
+	const IRB = 11642
+	export TITLE, STUDY, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID, IRB)
+end
 
 # ╔═╡ 2a8772f8-a803-4fc5-90cc-ba1a9ef023f6
 md"""Let's look at the various types of visits."""
@@ -39,15 +44,8 @@ md"""Let's look at the various types of visits."""
 # ╔═╡ 075d9ffa-c976-4af7-9e0a-8bd519812860
 md"""It seems hard to know exactly which visits might be for primary care."""
 
-# ╔═╡ 86ad1b0f-b397-4c15-ad61-306470c1173a
-primary_visit = @concepts [
-        CMS_Place_of_Service("02","Telehealth"),
-        CMS_Place_of_Service("49","Independent Clinic"),
-        Medicare_Specialty("70","Clinic or Group Practice"),
-        Visit("OMOP4822459","Home Visit"),
-        Visit("OMOP4822458","Office Visit"),
-        Visit("HE","Health examination"),
-    ]
+# ╔═╡ 8c2c163a-8116-4c4a-9f29-9de2db1b6a9a
+TRDW.funsql_export()
 
 # ╔═╡ 70d4d76a-554a-4748-a946-695769c4621b
 md"""We could break this down by category of office, hospital, and other"""
@@ -130,21 +128,16 @@ md"""Perhaps something useful is stored in visit_source"""
 md"""How about the specialty source concept?"""
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
-md"""## Appendix
+md"""
+## Appendix
+
+Notebook implementation details.
 """
 
 # ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
-DATA_WAREHOUSE = "ctsi.trdw_merge" # Both Soarian and Epic Data
-
-# ╔═╡ d4242e16-d8cf-46da-b707-5a9ff9efe1f2
 begin
-    db = TRDW.connect_with_funsql(DATA_WAREHOUSE)
-    nothing
-end
-
-# ╔═╡ 8b207476-3afa-4563-812e-c94dc3158a7a
-macro query(q)
-    :(TRDW.run($db, @funsql $q))
+    DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
+	@connect DATA_WAREHOUSE
 end
 
 # ╔═╡ d2462cf5-0881-4d66-9943-2b7f40137566
@@ -152,6 +145,21 @@ end
     visit()
     count_concept()
 end
+
+# ╔═╡ aa95371e-b3bf-4b42-88fb-d74d03975d36
+@query concept().filter(domain_id == "Visit" && standard_concept == "S").group(concept_name).filter(count()>1).define(collect_to_string(vocabulary_id))
+
+# ╔═╡ 70a3e08b-c622-42d6-b282-43289e2b922a
+@query Visit("Telehealth")
+
+# ╔═╡ d13c0aa4-b0da-42f6-82db-bb30541a01f9
+primary_visit = @query append(
+        Visit("Telehealth"),
+        Visit("Independent Clinic"),
+        Visit("Clinic or Group Practice"),
+        Visit("Home Visit"),
+        Visit("Office Visit"),
+        Visit("Health examination"))
 
 # ╔═╡ edf8c6c4-b4c6-4db9-bb56-0d5d5b7a647d
 @query begin
@@ -287,17 +295,18 @@ end
     select_concept(concept_id, count => roundups(count()), is_preepic; order=[count().desc()])
 end
 
-# ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
-macro aquery(q)
-    :(TRDW.run($db, @funsql $q; annotate_keys = true ))
-end
+# ╔═╡ c7a0850c-b83e-468c-9a46-75186dc7ad2d
+TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0
 # ╟─2a8772f8-a803-4fc5-90cc-ba1a9ef023f6
 # ╠═d2462cf5-0881-4d66-9943-2b7f40137566
 # ╟─075d9ffa-c976-4af7-9e0a-8bd519812860
-# ╠═86ad1b0f-b397-4c15-ad61-306470c1173a
+# ╠═aa95371e-b3bf-4b42-88fb-d74d03975d36
+# ╠═8c2c163a-8116-4c4a-9f29-9de2db1b6a9a
+# ╠═70a3e08b-c622-42d6-b282-43289e2b922a
+# ╠═d13c0aa4-b0da-42f6-82db-bb30541a01f9
 # ╟─70d4d76a-554a-4748-a946-695769c4621b
 # ╠═4b11dc23-00fd-4eaf-a4a4-e6417eafd246
 # ╟─618042b4-fad9-4c47-98d7-58cd59752e41
@@ -336,6 +345,4 @@ end
 # ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
 # ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
-# ╠═d4242e16-d8cf-46da-b707-5a9ff9efe1f2
-# ╠═8b207476-3afa-4563-812e-c94dc3158a7a
-# ╠═f171861f-fe0d-4976-861c-c28ab6e27101
+# ╟─c7a0850c-b83e-468c-9a46-75186dc7ad2d

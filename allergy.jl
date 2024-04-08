@@ -1,8 +1,8 @@
 ### A Pluto.jl notebook ###
-# v0.19.32
+# v0.19.38
 
 #> [frontmatter]
-#> order = "3"
+#> order = "50"
 #> title = "Allergy Data"
 
 using Markdown
