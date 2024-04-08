@@ -71,19 +71,23 @@ md"""
 
 > The [Condition](https://ohdsi.github.io/CommonDataModel/cdm54.html#CONDITION_OCCURRENCE) domain captures information about a person suggesting the presence of a disease or medical condition stated as a diagnosis, a sign, or a symptom, which is either observed by a provider or reported by the patient.
 
-In OHDSI, the *SNOMED* vocabulary is the primary vocabulary used for standard concepts. The *ICD10CM* vocabulary is often used for *source* concepts. We often use 3 character ICD10CM concept categories.
+In OHDSI, the [*SNOMED*](https://browser.ihtsdotools.org/?perspective=full&conceptId1=404684003&edition=MAIN/SNOMEDCT-US/2024-03-01&release=&languages=en) vocabulary is the primary vocabulary used for standard concepts, which provides support for [succinct groupers](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6115233/). Since SNOMED is not hierarchical, each clinical record may be counted under several of these groupers.
 """
 
-# ╔═╡ 8f422843-1f17-410d-acc6-87fb7c777bac
-md"""Following concept sets are defined with these 3 character ICD10CM categories."""
+# ╔═╡ 5392b439-0db1-4563-b75a-c5df8fd8e261
+md"""Alternatively, in the TRDW, the *ICD10CM* vocabulary is found in the *source* concepts. This is not the standard OHDSI approach to querying diagnosis records. We often use 3 character ICD10CM concept categories. Following concept sets are defined with these 3 character ICD10CM categories.
+"""
 
 # ╔═╡ 55ddb2aa-0089-4917-9466-731d682ef1a5
 md"""
-Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD are shown in SNOMED. We use the ICD9 to ICD10 General Equivalence Mapping (GEM) so that historical data sources coded with ICD9 could be counted under ICD10 categories.
+Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD use SNOMED. *Here we use the ICD9 to ICD10 General Equivalence Mapping (GEM) so that historical data sources coded with ICD9 could be counted under ICD10 categories.*
 """
 
 # ╔═╡ 744dca28-0d41-4137-9b55-ac235ff34b83
 md"""This table lists frequency of codes by ICD10 class. As above, ICD9 codes are mapped to ICD10."""
+
+# ╔═╡ 974f5b11-6510-4828-bf21-8d053c6f6ad2
+md"""Without *ICD9 to ICD10 GEM*, historical data and some recent data uses ICD9."""
 
 # ╔═╡ 5307be8f-68b4-42f7-a95f-b3a659dfe637
 md"""
@@ -196,6 +200,14 @@ end
 @query index().stratify_by_ethnicity()
   ╠═╡ =#
 
+# ╔═╡ 51ff9c8b-5c4e-4cff-a972-f445c292d48f
+@query begin
+    condition()
+    truncate_clinical_finding_grouper()
+	group_by_concept(; person_threshold=100)
+	format(limit=2000)
+end
+
 # ╔═╡ 244c0f09-603b-4dbb-ba54-4b3775691a81
 icd10cm = @query concept_sets(
 	infectious_and_parasitic = ICD10CM("A00-B99"),
@@ -228,7 +240,7 @@ icd10cm = @query concept_sets(
 	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
     group(class)
 	define(n_person => count_distinct(person_id),
-		   icdcodes => collect_to_string(icd_concept.concept_code))
+		   matching_icdcodes => collect_to_string(icd_concept.concept_code))
 	order(n_person.desc())
 end
 
@@ -239,6 +251,15 @@ end
 	to_3char_icd10cm(with_icd9to10gem=true)
     group_by_concept(; person_threshold=100, include=[class])
     format(limit=3000)
+end
+
+# ╔═╡ a95bc2dc-f86f-431e-a886-d92ce5c0be36
+@query begin
+    condition()
+	filter(icd_concept.vocabulary_id != "ICD10CM")
+	prefer_source_icdcm()
+	truncate_icd_to_3char()
+    group_by_concept(; person_threshold=100)
 end
 
 # ╔═╡ e3188763-95d7-44ed-8132-8f817d1d91e8
@@ -341,12 +362,15 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╠═7b6fec30-05ca-4be0-8057-2606dc2f75c0
 # ╟─7993b812-41db-4b26-9599-9c468be8c579
 # ╟─faca8760-27dc-4db7-aaeb-66b024e57fb3
-# ╟─8f422843-1f17-410d-acc6-87fb7c777bac
+# ╠═51ff9c8b-5c4e-4cff-a972-f445c292d48f
+# ╟─5392b439-0db1-4563-b75a-c5df8fd8e261
 # ╠═244c0f09-603b-4dbb-ba54-4b3775691a81
 # ╟─55ddb2aa-0089-4917-9466-731d682ef1a5
 # ╠═12ca99d3-0170-47cb-bd2e-6c1cd14a7da7
 # ╟─744dca28-0d41-4137-9b55-ac235ff34b83
 # ╠═8f7a46db-c860-41cd-9097-bf74f15db9a6
+# ╟─974f5b11-6510-4828-bf21-8d053c6f6ad2
+# ╠═a95bc2dc-f86f-431e-a886-d92ce5c0be36
 # ╟─5307be8f-68b4-42f7-a95f-b3a659dfe637
 # ╠═e3188763-95d7-44ed-8132-8f817d1d91e8
 # ╟─f4cc1362-2cbb-45af-9837-7a291d939927
