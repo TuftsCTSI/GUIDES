@@ -237,7 +237,8 @@ end
     condition()
 	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
 	to_3char_icd10cm(with_icd9to10gem=true)
-    group_by_concept(; person_threshold=2000, include=[class])
+    group_by_concept(; person_threshold=100, include=[class])
+    format(limit=3000)
 end
 
 # ╔═╡ e3188763-95d7-44ed-8132-8f817d1d91e8
@@ -258,6 +259,7 @@ end
     group_by_concept(; person_threshold=100)
 	define(concept_code => vocabulary_id == "SPL" ?
 	    substring(concept_code, 1, 9) : concept_code)
+	format(limit=2000)
 end
   ╠═╡ =#
 
@@ -269,6 +271,7 @@ end
     truncate_to_cpt4_hierarchy()
     truncate_to_loinc_hierarchy()
 	group_by_concept(; person_threshold=100)
+	format(limit=2000)
 end
   ╠═╡ =#
 
@@ -298,6 +301,7 @@ end
     procedure()
     to_procedure_hierarchies()
 	group_by_concept(; person_threshold=100)
+	format(limit=4000)
 end
 
   ╠═╡ =#

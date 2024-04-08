@@ -15,12 +15,13 @@ pkg_update:
 	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.update();'
 
 latest_trdw:
-	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git")'
+	julia --project=. -e 'using Pkg; Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git"); Pkg.instantiate()'
+
 revised_trdw:
-	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git#connect-macro")'
+	julia --project=. -e 'using Pkg; Pkg.add(url="https://github.com/TuftsCTSI/TRDW.jl.git", rev="connect-macro"); Pkg.instantiate()'
 
 develop_trdw:
-	julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.develop(path="${HOME}/TRDW.jl")'
+	julia --project=. -e 'using Pkg; Pkg.develop(path="${HOME}/TRDW.jl"); Pkg.instantiate()'
 
 %.html: %.jl
 	JULIA_COPY_STACKS=1 julia --project=. -e 'using PlutoSliderServer; PlutoSliderServer.export_notebook("$<"; Export_offer_binder = false)'
