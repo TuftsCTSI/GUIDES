@@ -250,7 +250,7 @@ end
 	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
 	to_3char_icd10cm(with_icd9to10gem=true)
     group_by_concept(; person_threshold=100, include=[class])
-    format(limit=3000)
+    format(group_by=class, limit=3000)
 end
 
 # ╔═╡ a95bc2dc-f86f-431e-a886-d92ce5c0be36
