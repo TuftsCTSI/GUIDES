@@ -82,9 +82,6 @@ md"""
 Here we list the count of clinical diagnosis records, as summarized by 3-character ICD10CM. Some diagnoses which are not codable as ICD are shown in SNOMED.
 """
 
-# ╔═╡ 99103b74-9e10-4c58-94f9-850c5cd2c403
-begin Revise.retry(); TRDW.funsql_export(); end
-
 # ╔═╡ 5307be8f-68b4-42f7-a95f-b3a659dfe637
 md"""
 ### Device Exposure
@@ -202,8 +199,8 @@ end
 # ╔═╡ 244c0f09-603b-4dbb-ba54-4b3775691a81
 icd10cm = @query concept_sets(
 	infectious_and_parasitic = ICD10CM("A00-B99"),
-	neoplasms = ICD10CM("C00-D49"),
-	blood_and_immune_disorders = ICD10CM("D50-D89"),
+	neoplasm = ICD10CM("C00-D49"),
+	blood_and_immune_disorder = ICD10CM("D50-D89"),
     endocrine_and_metabolic = ICD10CM("E00-E89"),
     mental_and_neurodevelopmental = ICD10CM("F01-F99"),
 	nervous_system = ICD10CM("G00-G99"),
@@ -215,24 +212,22 @@ icd10cm = @query concept_sets(
 	musculoskeletal_and_connective = ICD10CM("M00-M99"),
     genitourinary_system = ICD10CM("N00-N99"),
 	pregancy_birth_and_puerperium = ICD10CM("O00-O9A"),
-	perinatal_conditions = ICD10CM("P00-P96"),
-	congenital_abnormalities = ICD10CM("Q00-Q99"),
+	perinatal_condition = ICD10CM("P00-P96"),
+	congenital_abnormality = ICD10CM("Q00-Q99"),
 	clinical_and_laboratory = ICD10CM("R00-R99"),
-	external_consequences = ICD10CM("S00-T88"),
+	external_consequence = ICD10CM("S00-T88"),
 	special_purpose = ICD10CM("U00-U85"),
 	external_morbidity = ICD10CM("V00-Y99"),
-	health_status_and_services = ICD10CM("Z00-Z99")	
+	health_status_and_service = ICD10CM("Z00-Z99")	
 )
 
-# ╔═╡ f243cc93-76ea-48ba-b191-f30c27129424
-# ╠═╡ skip_as_script = true
-#=╠═╡
+# ╔═╡ 8f7a46db-c860-41cd-9097-bf74f15db9a6
 @query begin
     condition()
-	to_3char_icd10cm()
-    group_by_concept(; person_threshold=100)
+	concept_sets_breakout(icd10cm => $icd10cm; with_icd9to10gem=true)
+	to_3char_icd10cm(with_icd9to10gem=true)
+    group_by_concept(; person_threshold=100, include=[icd10cm])
 end
-  ╠═╡ =#
 
 # ╔═╡ e3188763-95d7-44ed-8132-8f817d1d91e8
 # ╠═╡ skip_as_script = true
@@ -337,8 +332,7 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╟─8f422843-1f17-410d-acc6-87fb7c777bac
 # ╠═244c0f09-603b-4dbb-ba54-4b3775691a81
 # ╟─55ddb2aa-0089-4917-9466-731d682ef1a5
-# ╠═f243cc93-76ea-48ba-b191-f30c27129424
-# ╠═99103b74-9e10-4c58-94f9-850c5cd2c403
+# ╠═8f7a46db-c860-41cd-9097-bf74f15db9a6
 # ╟─5307be8f-68b4-42f7-a95f-b3a659dfe637
 # ╟─791c54a7-5a2a-4a3d-929c-d80081febe8a
 # ╠═e3188763-95d7-44ed-8132-8f817d1d91e8
