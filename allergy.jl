@@ -9,6 +9,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ c6f49bb2-783a-11ee-0151-47703d60127f
+# ╠═╡ show_logs = false
 begin
     using Pkg
     Pkg.activate(Base.current_project("."))
@@ -17,35 +18,29 @@ end
 
 # ╔═╡ f082a987-c9b6-4330-812c-f1a7aa4cfb13
 begin
+    using Dates
     using FunSQL
     using PlutoUI
     using DataFrames
+    using HypertextLiteral
     using CSV
     using Revise
     using TRDW
-    TRDW.wide_notebook_style
 end
 
-# ╔═╡ 756b56b0-a735-4ef8-a41f-c38112acda2c
-using TRDW: OMOP_Extension, LOINC, SNOMED
-
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
-md"""
-# Querying Allergy Data
-
-This notebook outlines allergy handling in the Tufts Research Data Warehouse (TRDW).
-
-"""
+begin
+    const TITLE = "Allergy Data"
+	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const CASE = "01000526"
+    const SFID = "5008Y00002NhtQ5QAJ"
+	const IRB = 11642
+	export TITLE, STUDY, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID)
+end
 
 # ╔═╡ e2b098ec-5afd-427a-a34b-cae768a35008
 md"""Allergy records seem to be represented as children of one of the following high-level SNOMED concepts."""
-
-# ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
-allergy_concepts = @concepts begin
-    alergic_disorder = [SNOMED(781474001, "Allergic disorder")]
-    propensity_to_reaction = [SNOMED(420134006, "Propensity to adverse reaction")]
-    hypersensitivity = [SNOMED(609406000, "Non-allergic hypersensitivity reaction")]
-end
 
 # ╔═╡ 40083ddf-9f11-401e-a046-e2f03f94b05c
 md"""Before the Epic cutover the `value_as_concept_id` was primarily used to differentate allergens."""
@@ -76,23 +71,18 @@ md"""Our EPIC sourced data has a specific exception for `"penicillins"` mapping 
 md"""## Appendix
 """
 
-# ╔═╡ aaca8900-9cb4-4438-a18b-0f576b144d84
-TRDW.funsql_export()
-
-# ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
-DATA_WAREHOUSE = "ctsi.trdw_merge" # Both Soarian and Epic Data
-
-# ╔═╡ d4242e16-d8cf-46da-b707-5a9ff9efe1f2
-begin
-    db = TRDW.connect_with_funsql(DATA_WAREHOUSE)
-    nothing
-end
-
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
-macro query(q)
-    :(TRDW.run($db, @funsql $q))
+begin
+    DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
+	@connect DATA_WAREHOUSE
 end
 
+# ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
+allergy_concepts = @query concept_sets(
+    alergic_disorder = [SNOMED(781474001, "Allergic disorder")],
+    propensity_to_reaction = [SNOMED(420134006, "Propensity to adverse reaction")],
+    hypersensitivity = [SNOMED(609406000, "Non-allergic hypersensitivity reaction")]
+)
 
 # ╔═╡ 2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
 @query observation($allergy_concepts).group(ext.is_preepic).define(count())
@@ -109,6 +99,22 @@ end
     count_concept(value_as_concept_id)
 end
 
+# ╔═╡ 1ff00dca-7c61-4582-aaba-19e09c2cd46b
+ @query begin
+    observation($allergy_concepts)
+    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
+    filter(ext.is_preepic)
+    count_concept(concept_id, value_as_string)
+end
+
+# ╔═╡ 5a947b47-ce4b-4a16-9d43-9095cd2f5340
+ @query begin
+    observation(SNOMED(609328004, "Allergic disposition"))
+    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
+    filter(!ext.is_preepic)
+    count_concept(concept_id, value_as_string)
+end
+
 # ╔═╡ fa42532e-e4e9-4d37-9dd3-24b22506baf2
  @query begin
     observation(SNOMED(91936005, "Allergy to penicillin"))
@@ -117,25 +123,7 @@ end
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
-macro aquery(q)
-    :(TRDW.run($db, @funsql $q; annotate_keys=true))
-end
-
-# ╔═╡ 1ff00dca-7c61-4582-aaba-19e09c2cd46b
- @aquery begin
-    observation($allergy_concepts)
-    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
-    filter(ext.is_preepic)
-    count_concept(concept_id, value_as_string)
-end
-
-# ╔═╡ 5a947b47-ce4b-4a16-9d43-9095cd2f5340
- @aquery begin
-    observation(SNOMED(609328004, "Allergic disposition"))
-    filter(isnull(value_as_concept_id) || value_as_concept_id == 0)
-    filter(!ext.is_preepic)
-    count_concept(concept_id, value_as_string)
-end
+TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0
@@ -156,11 +144,7 @@ end
 # ╟─e637cd4d-8523-41ee-a461-839e60b222fa
 # ╠═fa42532e-e4e9-4d37-9dd3-24b22506baf2
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
-# ╟─c6f49bb2-783a-11ee-0151-47703d60127f
+# ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
-# ╠═aaca8900-9cb4-4438-a18b-0f576b144d84
-# ╠═756b56b0-a735-4ef8-a41f-c38112acda2c
-# ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
-# ╠═d4242e16-d8cf-46da-b707-5a9ff9efe1f2
 # ╠═f171861f-fe0d-4976-861c-c28ab6e27101
-# ╠═87f6fa05-6806-4044-b88f-ff447144ffa9
+# ╟─87f6fa05-6806-4044-b88f-ff447144ffa9

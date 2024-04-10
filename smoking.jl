@@ -9,6 +9,7 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ c6f49bb2-783a-11ee-0151-47703d60127f
+# ╠═╡ show_logs = false
 begin
     using Pkg
     Pkg.activate(Base.current_project("."))
@@ -53,17 +54,6 @@ md"""Some of these findings might not have a corresponding `value_as_concept_id`
 # ╔═╡ 8d42b408-3432-4f2c-8f85-d40f81014f94
 md"""We could construct a value set of concepts that match smoking behavior..."""
 
-# ╔═╡ eab365a6-d117-435a-8813-e8e0b2d4f9b6
-smoking_behavior = @concepts begin
-    smoker = [
-        OMOP_Extension("OMOP5181846","Cigar smoker"),
-        OMOP_Extension("OMOP5181838","Cigarette smoker"),
-        OMOP_Extension("OMOP5181836","Electronic cigarette smoker"),
-        OMOP_Extension("OMOP5181847","Hookah smoker"),
-        OMOP_Extension("OMOP5181837","Passive smoker"),
-        OMOP_Extension("OMOP5181845","Pipe smoker")]
-end
-
 # ╔═╡ 31734392-7731-4fd9-8a5e-6ecf45181dee
 md"""#### Exploring OMOP Extension `findings_of_tobacco`."""
 
@@ -98,7 +88,7 @@ end
 @query begin
     observation()
     filter(concept_matches($findings_of_tobacco))
-    define(primary_concept => concat(left(concept.concept_name, 19), "..."))
+    define(primary_concept => concept.concept_name)
     count_concept(value_as_concept_id, primary_concept)
 end
 
@@ -112,23 +102,34 @@ end
 end
 
 
+# ╔═╡ eab365a6-d117-435a-8813-e8e0b2d4f9b6
+smoking_behavior = @query concept_sets(
+	smoker = [
+        OMOP_Extension("Cigar smoker"),
+        OMOP_Extension("Cigarette smoker"),
+        OMOP_Extension("Electronic cigarette smoker"),
+        OMOP_Extension("Hookah smoker"),
+        OMOP_Extension("Passive smoker"),
+        OMOP_Extension("Pipe smoker")]
+)
+
 # ╔═╡ 6a704eb8-ddd5-4a7d-a5b9-8f017b5e575a
-@query concept($findings_of_tobacco).concept_children()
+@query $findings_of_tobacco.concept_children()
 
 # ╔═╡ 8f6374e2-e8b1-4d26-b341-5fd19c17af40
-@query concept(OMOP_Extension(nothing, "Currently doesn't use tobacco...")).concept_children()
+@query OMOP_Extension("Currently doesn't use tobacco or its derivatives").concept_children()
 
 # ╔═╡ 517b0d43-971e-43d3-aaec-18be5afcd587
-@query concept(OMOP_Extension(nothing, "Tobacco or its derivatives user")).concept_children()
+@query OMOP_Extension("Tobacco or its derivatives user").concept_children()
 
 # ╔═╡ 4192e5e2-3fb8-4550-a9d6-387209fda461
-@query concept(OMOP_Extension(nothing, "Cigarette smoker")).concept_children()
+@query OMOP_Extension("Cigarette smoker").concept_children()
 
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
 TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
-# ╠═0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
+# ╟─0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
 # ╠═e2a29e89-036d-4d6d-9176-8c0ec666f87c
 # ╟─afe5e914-2e19-4d22-ac09-332b1575e87d
 # ╠═2674b4c6-9dfe-42c4-9915-e9a873d89241
@@ -146,7 +147,7 @@ TRDW.NotebookFooter(; CASE, SFID)
 # ╠═517b0d43-971e-43d3-aaec-18be5afcd587
 # ╠═4192e5e2-3fb8-4550-a9d6-387209fda461
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
-# ╟─c6f49bb2-783a-11ee-0151-47703d60127f
+# ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
 # ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
-# ╠═f171861f-fe0d-4976-861c-c28ab6e27101
+# ╟─f171861f-fe0d-4976-861c-c28ab6e27101

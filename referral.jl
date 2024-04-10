@@ -15,35 +15,31 @@ begin
     Pkg.instantiate()
 end
 
-# ╔═╡ f082a987-c9b6-4330-812c-f1a7aa4cfb13
+# ╔═╡ d4242e16-d8cf-46da-b707-5a9ff9efe1f2
 begin
+    using Dates
     using FunSQL
     using PlutoUI
     using DataFrames
+    using HypertextLiteral
     using CSV
     using Revise
     using TRDW
-    TRDW.wide_notebook_style
 end
 
-# ╔═╡ 756b56b0-a735-4ef8-a41f-c38112acda2c
-using TRDW: OMOP_Extension, LOINC, SNOMED
-
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
-md"""
-# Querying Patient Referral Data
-
-This notebook outlines the handling of patient referrals in the Tufts Research Data Warehouse (TRDW).
-
-"""
+begin
+    const TITLE = "Patient Referrals"
+	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const CASE = "01000526"
+    const SFID = "5008Y00002NhtQ5QAJ"
+	const IRB = 11642
+	export TITLE, STUDY, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID)
+end
 
 # ╔═╡ e2b098ec-5afd-427a-a34b-cae768a35008
 md"""All patient referral records coming from Epic Clarity are mapped to the same SNOMED code regardless of the department to where they are referring the patient"""
-
-# ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
-referral_concepts = @concepts begin
-    patient_referral = [SNOMED(3457005, "Patient referral")]
-end
 
 # ╔═╡ 40083ddf-9f11-401e-a046-e2f03f94b05c
 md"""
@@ -72,23 +68,16 @@ Since "reffered-to" values are not mapped to the OMOP vocabulary, we filter refe
 md"""## Appendix
 """
 
-# ╔═╡ aaca8900-9cb4-4438-a18b-0f576b144d84
-TRDW.funsql_export()
-
-# ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
-DATA_WAREHOUSE = "ctsi.trdw_merge" # Both Soarian and Epic Data
-
-# ╔═╡ d4242e16-d8cf-46da-b707-5a9ff9efe1f2
-begin
-    db = TRDW.connect_with_funsql(DATA_WAREHOUSE)
-    nothing
-end
-
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
-macro query(q)
-    :(TRDW.run($db, @funsql $q))
+begin
+    DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
+	@connect DATA_WAREHOUSE
 end
 
+# ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84
+referral_concepts = @query concept_sets(
+    patient_referral = [SNOMED(3457005, "Patient referral")]
+)
 
 # ╔═╡ 2961fb72-cc3a-4e72-b5fb-c7f0e4086cb1
 @query observation($referral_concepts).group(ext.is_preepic).define(roundups(count()))
@@ -111,9 +100,7 @@ end
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
-macro aquery(q)
-    :(TRDW.run($db, @funsql $q; annotate_keys=true))
-end
+TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0
@@ -128,10 +115,6 @@ end
 # ╠═1ff00dca-7c61-4582-aaba-19e09c2cd46b
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
 # ╟─c6f49bb2-783a-11ee-0151-47703d60127f
-# ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
-# ╠═aaca8900-9cb4-4438-a18b-0f576b144d84
-# ╠═756b56b0-a735-4ef8-a41f-c38112acda2c
-# ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
 # ╠═d4242e16-d8cf-46da-b707-5a9ff9efe1f2
 # ╠═f171861f-fe0d-4976-861c-c28ab6e27101
-# ╠═87f6fa05-6806-4044-b88f-ff447144ffa9
+# ╟─87f6fa05-6806-4044-b88f-ff447144ffa9

@@ -2,13 +2,14 @@
 # v0.19.38
 
 #> [frontmatter]
-#> order = "20"
-#> title = "Visits"
+#> order = "99"
+#> title = "Minimal Notebook"
 
 using Markdown
 using InteractiveUtils
 
 # ╔═╡ c6f49bb2-783a-11ee-0151-47703d60127f
+# ╠═╡ show_logs = false
 begin
     using Pkg
     Pkg.activate(Base.current_project("."))
@@ -29,17 +30,14 @@ end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
 begin
-    const TITLE = "Visit Exploration"
+    const TITLE = "Minimal Notebook"
 	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
 	const IRB = 11642
 	export TITLE, STUDY, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID, IRB)
+    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID)
 end
-
-# ╔═╡ 2a8772f8-a803-4fc5-90cc-ba1a9ef023f6
-md"""In the TRDW, visit records come from Epic and various historical sources. The following visit concepts are used."""
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
 md"""
@@ -54,21 +52,13 @@ begin
 	@connect DATA_WAREHOUSE
 end
 
-# ╔═╡ d2462cf5-0881-4d66-9943-2b7f40137566
-@query begin
-    visit()
-    count_concept()
-end
-
 # ╔═╡ c7a0850c-b83e-468c-9a46-75186dc7ad2d
 TRDW.NotebookFooter(; CASE, SFID)
 
 # ╔═╡ Cell order:
-# ╟─95a93876-78af-40a1-b55f-24062f7eddb0
-# ╟─2a8772f8-a803-4fc5-90cc-ba1a9ef023f6
-# ╠═d2462cf5-0881-4d66-9943-2b7f40137566
+# ╠═95a93876-78af-40a1-b55f-24062f7eddb0
 # ╟─d858cfa7-f0a0-4616-86da-9cebb90c6d65
 # ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
 # ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
-# ╟─c7a0850c-b83e-468c-9a46-75186dc7ad2d
+# ╠═c7a0850c-b83e-468c-9a46-75186dc7ad2d
