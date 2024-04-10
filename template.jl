@@ -30,13 +30,13 @@ end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
 begin
-    const TITLE = "Minimal Notebook"
-	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const TITLE = "TRDW — Minimal Notebook"
+    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
-	const IRB = 11642
-	export TITLE, STUDY, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID)
+    const IRB = 11642
+    export TITLE, NOTE, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
 end
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
@@ -49,7 +49,7 @@ Notebook implementation details.
 # ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
 begin
     DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
-	@connect DATA_WAREHOUSE
+    @connect DATA_WAREHOUSE
 end
 
 # ╔═╡ c7a0850c-b83e-468c-9a46-75186dc7ad2d

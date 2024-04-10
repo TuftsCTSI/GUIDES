@@ -30,13 +30,13 @@ end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
 begin
-    const TITLE = "Allergy Data"
-	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const TITLE = "TRDW — Allergy Data"
+    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
-	const IRB = 11642
-	export TITLE, STUDY, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID)
+    const IRB = 11642
+    export TITLE, NOTE, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
 end
 
 # ╔═╡ e2b098ec-5afd-427a-a34b-cae768a35008
@@ -74,7 +74,7 @@ md"""## Appendix
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
 begin
     DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
-	@connect DATA_WAREHOUSE
+    @connect DATA_WAREHOUSE
 end
 
 # ╔═╡ 67f8a286-cfc6-4f75-a87c-9d0d1ebccf84

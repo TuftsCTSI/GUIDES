@@ -30,13 +30,13 @@ end
 
 # ╔═╡ 0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
 begin
-    const TITLE = "Smoking Behavior"
-	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const TITLE = "TRDW — Smoking Behavior"
+    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
-	const IRB = 11642
-	export TITLE, STUDY, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID, IRB)
+    const IRB = 11642
+    export TITLE, NOTE, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
 end
 
 # ╔═╡ afe5e914-2e19-4d22-ac09-332b1575e87d
@@ -64,7 +64,7 @@ md"""## Appendix
 # ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
 begin
     DATA_WAREHOUSE = "ctsi.trdw_green" # shifted dates/times but no other PHI
-	@connect DATA_WAREHOUSE
+    @connect DATA_WAREHOUSE
 end
 
 # ╔═╡ e2a29e89-036d-4d6d-9176-8c0ec666f87c
@@ -104,7 +104,7 @@ end
 
 # ╔═╡ eab365a6-d117-435a-8813-e8e0b2d4f9b6
 smoking_behavior = @query concept_sets(
-	smoker = [
+    smoker = [
         OMOP_Extension("Cigar smoker"),
         OMOP_Extension("Cigarette smoker"),
         OMOP_Extension("Electronic cigarette smoker"),

@@ -30,13 +30,13 @@ end
 
 # ╔═╡ 5506a86d-5464-403b-99f2-c569ecc8d357
 begin
-    const TITLE = "Clinical Data Inventory of TRDW"
-	const STUDY = "Tufts Research Data Warehouse / Guides & Demos"
+    const TITLE = "TRDW — Clinical Data Inventory"
+	const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
     const CASE = "01000526"
     const SFID = "5008Y00002NhtQ5QAJ"
 	const IRB = 11642
-	export TITLE, STUDY, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; STUDY, CASE, SFID, IRB)
+	export TITLE, NOTE, CASE, SFID, IRB
+    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
 end
 
 # ╔═╡ f99deebf-880e-43be-9287-71ae128a12ea
@@ -260,7 +260,7 @@ icd10cm = @query concept_sets(
 # ╔═╡ 12ca99d3-0170-47cb-bd2e-6c1cd14a7da7
 @query begin
     condition()
-	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
+	concept_sets_breakout(class => $icd10cm; with_icd9gem=true)
     group(class)
 	define(n_person => count_distinct(person_id),
 		   matching_icdcodes => collect_to_string(icd_concept.concept_code))
@@ -270,8 +270,8 @@ end
 # ╔═╡ 8f7a46db-c860-41cd-9097-bf74f15db9a6
 @query begin
     condition()
-	concept_sets_breakout(class => $icd10cm; with_icd9to10gem=true)
-	to_3char_icd10cm(with_icd9to10gem=true)
+	concept_sets_breakout(class => $icd10cm; with_icd9gem=true)
+	to_3char_icdcm(with_icd9gem=true)
     group_by_concept(; person_threshold=100, include=[class])
     format(group_by=class, limit=3000)
 end
