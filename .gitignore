@@ -10,3 +10,6 @@
 *.zip
 *.7z
 *.png
+.Rprofile
+pluto_export.json
+renv/

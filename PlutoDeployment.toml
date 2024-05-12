@@ -1,0 +1,4 @@
+[Export]
+cache_dir = ".pluto_state_cache"
+offer_binder = false
+create_pluto_featured_index = true

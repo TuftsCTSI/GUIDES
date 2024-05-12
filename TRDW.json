@@ -1,0 +1,14 @@
+{
+  "project": {
+    "slug": "a0n8Y00000Z6YtIQAV",
+    "id": "P-005547",
+    "irb": "11642",
+    "pi": "William Harvey",
+    "title": "Tufts Research Data Warehouse (TRDW)",
+    "description": "This is for the general construction, improvement, maintenance, and documentation of the Tufts Research Data Warehouse (TRDW)."},
+  "case": {
+    "slug": "5008Y00002NhtQ5QAJ",
+    "id": "01000526",
+    "title": "Tufts Research Data Warehouse (TRDW) — Guides & Demos",
+    "description": "This is the development of FunOHDSI notebooks that explore various aspects of the TRDW data warehouse, as non-human subject research reporting only summary counts."}
+}
