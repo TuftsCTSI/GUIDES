@@ -74,5 +74,5 @@ purge-cache: purge-julia-cache purge-r-cache purge-pluto-cache #: clear all pack
 
 clean: #: delete generated files
 	rm -f *.html *.csv *.xlsx *.zip pluto_export.json .Rprofile
-	rm -rf renv .pluto_state_cache
+	rm -rf renv .pluto_state_cache pluto_export.json
 .PHONY: clean
