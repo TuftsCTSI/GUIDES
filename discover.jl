@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.38
+# v0.19.42
 
 #> [frontmatter]
 #> order = "1"
@@ -29,15 +29,7 @@ begin
 end
 
 # ╔═╡ 5506a86d-5464-403b-99f2-c569ecc8d357
-begin
-    const TITLE = "TRDW — Clinical Data Inventory"
-	const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
-    const CASE = "01000526"
-    const SFID = "5008Y00002NhtQ5QAJ"
-	const IRB = 11642
-	export TITLE, NOTE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
-end
+TRDW.NotebookHeader("TRDW — Clinical Data Inventory")
 
 # ╔═╡ f99deebf-880e-43be-9287-71ae128a12ea
 md"""This notebook takes the entire TRDW as its cohort, and catalogues various domains by intermediate concepts. For example, diagnosis are catalogued by 3-character ICD10-CM.""" 
@@ -369,7 +361,7 @@ end
   ╠═╡ =#
 
 # ╔═╡ fe876afa-b56f-47d1-85ef-83556798f8c4
-TRDW.NotebookFooter(; CASE, SFID)
+TRDW.NotebookFooter()
 
 # ╔═╡ Cell order:
 # ╟─5506a86d-5464-403b-99f2-c569ecc8d357

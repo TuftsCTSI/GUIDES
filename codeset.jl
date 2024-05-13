@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.38
+# v0.19.42
 
 #> [frontmatter]
 #> order = "99"
@@ -29,13 +29,7 @@ begin
 end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
-begin
-    const TITLE = "N3C Recommended Codesets"
-    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
-    const IRB = 11642
-    export TITLE, NOTE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; NOTE)
-end
+TRDW.NotebookHeader("N3C Recommended Codesets")
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
 md"""
@@ -63,9 +57,6 @@ dd = @query concept_sets(
 	p = SNOMED("289203002", "Finding of pattern of pregnancy")
 )
 
-# ╔═╡ d6840fd8-879c-47bb-853c-322e26d5db9a
-dump(dd)
-
 # ╔═╡ 8a8c87b0-6ea3-4def-b115-a149da63386f
 ddd = @query concept(
 			concept_id == 4125593
@@ -73,11 +64,8 @@ ddd = @query concept(
 
 # ╔═╡ 239c8f1f-2709-4db0-8d6d-36bbe8a98645
 for r in eachrow(ddd.ref.x)
-	print(r["concept_id"])
+	println(r["concept_id"])
 end
-
-# ╔═╡ 4faa997b-2ae1-4440-887e-66d87b8d2e26
-dump(ddd)
 
 # ╔═╡ 024b5bd5-1e7a-48a1-83a6-081d47ff0c7c
 @query from(codeset_expression).filter(is_n3c_recommended == 1).limit(100)
@@ -122,15 +110,16 @@ begin
 	@htl "$titles"
 end
 
+# ╔═╡ 8d8be14d-d11e-4890-bafd-6900e05b2563
+TRDW.NotebookFooter()
+
 # ╔═╡ Cell order:
-# ╠═95a93876-78af-40a1-b55f-24062f7eddb0
+# ╟─95a93876-78af-40a1-b55f-24062f7eddb0
 # ╠═f980f781-c1f8-4e9c-bd22-cac6fb1dbd16
 # ╠═1c70715b-85e0-483a-98cb-0f11c0bc06a9
 # ╠═a0c28148-e8f8-4ef1-b7a5-aea58e41bc0f
 # ╠═239c8f1f-2709-4db0-8d6d-36bbe8a98645
 # ╠═962c15d8-16d6-41b5-a6c7-f54bfdfcb483
-# ╠═4faa997b-2ae1-4440-887e-66d87b8d2e26
-# ╠═d6840fd8-879c-47bb-853c-322e26d5db9a
 # ╠═de70824c-deee-4b88-9f09-7be7a95a2320
 # ╠═8a8c87b0-6ea3-4def-b115-a149da63386f
 # ╠═024b5bd5-1e7a-48a1-83a6-081d47ff0c7c
@@ -139,3 +128,4 @@ end
 # ╠═c6f49bb2-783a-11ee-0151-47703d60127f
 # ╠═f082a987-c9b6-4330-812c-f1a7aa4cfb13
 # ╠═b00d388f-cf21-49c6-a985-2e011b8913b3
+# ╟─8d8be14d-d11e-4890-bafd-6900e05b2563

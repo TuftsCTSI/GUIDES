@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.38
+# v0.19.42
 
 #> [frontmatter]
 #> order = "50"
@@ -29,15 +29,7 @@ begin
 end
 
 # ╔═╡ 0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
-begin
-    const TITLE = "TRDW — Smoking Behavior"
-    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
-    const CASE = "01000526"
-    const SFID = "5008Y00002NhtQ5QAJ"
-    const IRB = 11642
-    export TITLE, NOTE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
-end
+TRDW.NotebookHeader("TRDW — Smoking Behavior")
 
 # ╔═╡ afe5e914-2e19-4d22-ac09-332b1575e87d
 md"""The recommended OHDSI vocabulary concept for representing smoking data is OMOP Extension, [903652](https://athena.ohdsi.org/search-terms/terms/903652)."""
@@ -126,7 +118,7 @@ smoking_behavior = @query concept_sets(
 @query OMOP_Extension("Cigarette smoker").concept_children()
 
 # ╔═╡ f171861f-fe0d-4976-861c-c28ab6e27101
-TRDW.NotebookFooter(; CASE, SFID)
+TRDW.NotebookFooter()
 
 # ╔═╡ Cell order:
 # ╟─0db1f701-47e3-4755-b0d5-0b39a5fd1dbb

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.38
+# v0.19.42
 
 #> [frontmatter]
 #> order = "30"
@@ -28,15 +28,7 @@ begin
 end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
-begin
-    const TITLE = "TRDW — Patient Referrals"
-    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
-    const CASE = "01000526"
-    const SFID = "5008Y00002NhtQ5QAJ"
-    const IRB = 11642
-    export TITLE, NOTE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
-end
+TRDW.NotebookHeader("TRDW — Patient Referrals")
 
 # ╔═╡ e2b098ec-5afd-427a-a34b-cae768a35008
 md"""All patient referral records coming from Epic Clarity are mapped to the same SNOMED code regardless of the department to where they are referring the patient"""
@@ -100,7 +92,7 @@ end
 end
 
 # ╔═╡ 87f6fa05-6806-4044-b88f-ff447144ffa9
-TRDW.NotebookFooter(; CASE, SFID)
+TRDW.NotebookFooter()
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0

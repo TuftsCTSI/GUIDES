@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.38
+# v0.19.42
 
 #> [frontmatter]
 #> order = "20"
@@ -29,13 +29,7 @@ end
 
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
 begin
-    const TITLE = "TRDW — Visit Exploration"
-    const NOTE = "Tufts Research Data Warehouse (TRDW) Guides & Demos"
-    const CASE = "01000526"
-    const SFID = "5008Y00002NhtQ5QAJ"
-    const IRB = 11642
-    export TITLE, NOTE, CASE, SFID, IRB
-    TRDW.NotebookHeader(TITLE; NOTE, CASE, SFID)
+    TRDW.NotebookHeader("TRDW — Visit Exploration")
 end
 
 # ╔═╡ 2a8772f8-a803-4fc5-90cc-ba1a9ef023f6
@@ -61,7 +55,7 @@ end
 end
 
 # ╔═╡ c7a0850c-b83e-468c-9a46-75186dc7ad2d
-TRDW.NotebookFooter(; CASE, SFID)
+TRDW.NotebookFooter()
 
 # ╔═╡ Cell order:
 # ╟─95a93876-78af-40a1-b55f-24062f7eddb0
