@@ -1700,7 +1700,7 @@ version = "1.0.3"
 
 [[deps.TRDW]]
 deps = ["Arrow", "CSV", "Chain", "DBInterface", "DataFrames", "Dates", "FunSQL", "HTTP", "HypertextLiteral", "JSON", "LightXML", "Markdown", "ODBC", "OrderedCollections", "Pkg", "PlutoLinks", "PlutoPlotly", "PlutoUI", "Revise", "SHA", "Scratch", "StringEncodings", "Tables", "Unicode"]
-git-tree-sha1 = "8de4ba8d3c8e09590c00c2d6bc06e07743f84faf"
+git-tree-sha1 = "5985f2e3152d1bf7860f98309f9548091f641966"
 repo-rev = "main"
 repo-url = "https://github.com/TuftsCTSI/TRDW.jl"
 uuid = "0719a0bd-20d8-4d8e-abe7-d82c18a4d09f"
