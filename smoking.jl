@@ -3,7 +3,7 @@
 
 #> [frontmatter]
 #> order = "50"
-#> title = "Smoking Behavior"
+#> title = "Smoking Behavior (deprecated)"
 
 using Markdown
 using InteractiveUtils
