@@ -31,16 +31,6 @@ end
 # ╔═╡ 95a93876-78af-40a1-b55f-24062f7eddb0
 TRDW.NotebookHeader("N3C Recommended Codesets")
 
-# ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
-md"""
-## Appendix
-
-Notebook implementation details.
-"""
-
-# ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
-@connect "ctsi.codeset" "ctsi.trdw_green" # shifted dates/times but no other PHI
-
 # ╔═╡ 1c70715b-85e0-483a-98cb-0f11c0bc06a9
 @query from(codeset_expression).filter(codeset_id == 106000255).limit(100)
 
@@ -49,13 +39,13 @@ xf = @query concept(
 	concept_id == 4125593
 ).limit(10)
 
-# ╔═╡ de70824c-deee-4b88-9f09-7be7a95a2320
-"""$(xf.ref.x[!, "vocabulary_id"][1])("$(xf.ref.x[!, "concept_code"][1])", $(xf.ref.x[!, "concept_name"][1]))"""
-
 # ╔═╡ 962c15d8-16d6-41b5-a6c7-f54bfdfcb483
 dd = @query concept_sets(
 	p = SNOMED("289203002", "Finding of pattern of pregnancy")
 )
+
+# ╔═╡ de70824c-deee-4b88-9f09-7be7a95a2320
+"""$(xf.ref.x[!, "vocabulary_id"][1])("$(xf.ref.x[!, "concept_code"][1])", $(xf.ref.x[!, "concept_name"][1]))"""
 
 # ╔═╡ 8a8c87b0-6ea3-4def-b115-a149da63386f
 ddd = @query concept(
@@ -69,6 +59,13 @@ end
 
 # ╔═╡ 024b5bd5-1e7a-48a1-83a6-081d47ff0c7c
 @query from(codeset_expression).filter(is_n3c_recommended == 1).limit(100)
+
+# ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
+md"""
+## Appendix
+
+Notebook implementation details.
+"""
 
 # ╔═╡ 9a9f06ba-07b9-4d73-b7ff-e680f5ced07b
 df = @query begin
@@ -109,6 +106,9 @@ begin
 	end
 	@htl "$titles"
 end
+
+# ╔═╡ b00d388f-cf21-49c6-a985-2e011b8913b3
+@connect "ctsi.codeset" "ctsi.trdw_green" # shifted dates/times but no other PHI
 
 # ╔═╡ 8d8be14d-d11e-4890-bafd-6900e05b2563
 TRDW.NotebookFooter()

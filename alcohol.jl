@@ -26,7 +26,7 @@ begin
 end
 
 # ╔═╡ 0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
-TRDW.NotebookHeader("TRDW — Tobacco")
+TRDW.NotebookHeader("TRDW — Alcohol")
 
 # ╔═╡ 5fe23636-10fe-42e8-8814-3247211e3299
 md"""## Accessing Tobacco Data in TRDW"""
@@ -41,7 +41,7 @@ md"""#### Composite (Epic and Legacy)"""
 md"""##### SHX"""
 
 # ╔═╡ 348ec5c2-1e2d-406d-8533-d1e2fecf4f69
-@funsql shx_tobacco() = from(shx_tobacco)
+@funsql shx_alcohol() = from(shx_alcohol)
 
 # ╔═╡ d92682b0-4271-49c9-a25e-8398c004a109
 md"""##### SDD\_DATA\_FULL"""
@@ -53,7 +53,7 @@ md"""#### Epic-sourced"""
 md"""##### SOCIAL\_HX - Tobacco Subset"""
 
 # ╔═╡ 1457935b-7cfd-498b-9817-6d5629214d84
-@funsql shx_epic_tobacco() = from(shx_epic_tobacco)
+@funsql shx_epic_alcohol() = from(shx_epic_alcohol)
 
 # ╔═╡ b602fc4d-7e08-41af-b591-a6169e444346
 md"""##### SDD\_DATA - Tobacco Subset"""
@@ -67,7 +67,7 @@ md"""
 """
 
 # ╔═╡ 37743ca6-8cd7-406e-8bcd-15da65da7366
-@funsql shx_soarian_tobacco() = from(shx_soarian_tobacco)
+@funsql shx_soarian_alcohol() = from(shx_soarian_alcohol)
 
 # ╔═╡ 8f451a1a-ca46-4cc4-9de4-c07775bf9c21
 md"""##### Soarian Diagnoses - Tobacco Subset
@@ -76,8 +76,8 @@ This table is formatted in three ways: legacy, social_hx, and sdd"""
 
 # ╔═╡ 0df53a61-3f39-4d94-aad0-00150883e6f5
 begin
-	@funsql soarian_tobacco_dx() = from(soarian_tobacco_dx)
-	@funsql shx_soarian_tobacco_dx() = from(shx_soarian_tobacco_dx)
+	@funsql soarian_alcohol_dx() = from(soarian_alcohol_dx)
+	@funsql shx_soarian_alcohol_dx() = from(shx_soarian_alcohol_dx)
 end
 
 # ╔═╡ f4e7e7f7-c6c1-4118-87ab-9e5b8060fc34
@@ -85,8 +85,8 @@ md"""##### Soarian Observations - Tobacco Subset"""
 
 # ╔═╡ 2bd2a35c-a347-4f0d-a3ce-defb56a8a4bb
 begin
-	@funsql soarian_tobacco_obs() = from(soarian_tobacco_obs)
-	@funsql shx_soarian_tobacco_obs() = from(shx_soarian_tobacco_obs)
+	@funsql soarian_alcohol_obs() = from(soarian_alcohol_obs)
+	@funsql shx_soarian_alcohol_obs() = from(shx_soarian_alcohol_obs)
 end
 
 # ╔═╡ d858cfa7-f0a0-4616-86da-9cebb90c6d65
@@ -103,7 +103,7 @@ end
 TRDW.NotebookFooter()
 
 # ╔═╡ Cell order:
-# ╠═0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
+# ╟─0db1f701-47e3-4755-b0d5-0b39a5fd1dbb
 # ╟─5fe23636-10fe-42e8-8814-3247211e3299
 # ╟─64cae773-0478-4ec8-8a8c-c07a294fea92
 # ╟─47385f71-c39d-4018-a4a3-fe4f88d9a525
