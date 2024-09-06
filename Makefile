@@ -1,6 +1,6 @@
 ifeq ($(CI),true)
-EXPORT_DIR ?= /run/notebooks/html/$(notdir $(CURDIR))
-CACHE_DIR ?= /run/notebooks/cache/$(notdir $(CURDIR))
+export EXPORT_DIR ?= /run/notebooks/html/$(notdir $(CURDIR))
+export CACHE_DIR ?= /run/notebooks/cache/$(notdir $(CURDIR))
 endif
 
 #export RENV_WATCHDOG_ENABLED = FALSE
@@ -10,6 +10,7 @@ endif
 #endif
 #export LD_LIBRARY_PATH = /usr/lib/jvm/default-java/lib/server
 export JULIA_COPY_STACKS = 1
+export JULIA_NUM_PRECOMPILE_TASKS = 1
 
 help: #: show this help
 	@echo "Available targets:"
